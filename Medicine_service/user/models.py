@@ -26,7 +26,7 @@ class User(models.Model):
                                              verbose_name='Время создания')
     phone_number = PhoneNumberField(null=False, blank=False, unique=True,
                                     verbose_name='Телефон пациента')
-    email = models.EmailField(verbose_name='Электронная почта пациента')
+    email = models.EmailField(verbose_name='Электронная почта пациента', default=None)
     address = models.OneToOneField('Address', on_delete=models.PROTECT,
                                    related_name='User_address', verbose_name='Адрес пациента')
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='Slug')

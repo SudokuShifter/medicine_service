@@ -17,7 +17,7 @@ class Doctor(models.Model):
                                              verbose_name='Время врача')
     phone_number = PhoneNumberField(null=False, blank=False, unique=True,
                                     verbose_name='Телефон врача')
-    email = models.EmailField(verbose_name='Электронная почта врача')
+    email = models.EmailField(verbose_name='Электронная почта врача', default=None)
     position = models.OneToOneField('Position', on_delete=models.PROTECT,
                                     related_name='pos', verbose_name='Должность врача')
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='Slug')
