@@ -32,8 +32,6 @@ class User(models.Model):
     photo = models.ImageField(upload_to='photos/%Y/%m/%d/', default=None, blank=True, null=True,
                               verbose_name='Фото')
     status = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)))
-    medical_record = models.ForeignKey('MedicalRecord', on_delete=models.PROTECT, default=None,
-                                       related_name='record', verbose_name='История болезни пациента')
 
     objects = models.Manager()
     sick_patients = SickPatients()
@@ -66,11 +64,3 @@ class Address(models.Model):
 
     def __str__(self):
         return f'{self.country} {self.city} {self.street} {self.house_number} {self.flat_number}'
-
-
-class MedicalRecord(models.Model):
-    medical_record = models.TextField(verbose_name='История болезни пациента', default=None)
-    comment_doctor = models.CharField(max_length=255, verbose_name='Комментарии к пациенту')
-
-    def __str__(self):
-        return self.medical_record
