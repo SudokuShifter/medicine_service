@@ -20,13 +20,14 @@ class User(models.Model):
     second_name = models.CharField(max_length=255,
                                    verbose_name='Фамилия пациента')
     middle_name = models.CharField(max_length=255, blank=True, null=True,
-                                   verbose_name='Отчество')
+                                   verbose_name='Отчество пациента')
     birthday = models.DateField(verbose_name='Дата Рождения')
     time_registration = models.DateTimeField(auto_now_add=True,
                                              verbose_name='Время создания')
     phone_number = PhoneNumberField(null=False, blank=False, unique=True,
                                     verbose_name='Телефон пациента')
-    address = models.OneToOneField('Address', on_delete=models.CASCADE,
+    email = models.EmailField(verbose_name='Электронная почта пациента')
+    address = models.OneToOneField('Address', on_delete=models.PROTECT,
                                    related_name='User_address', verbose_name='Адрес пациента')
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='Slug')
     photo = models.ImageField(upload_to='photos/%Y/%m/%d/', default=None, blank=True, null=True,
@@ -47,7 +48,7 @@ class User(models.Model):
         verbose_name_plural = 'Пациенты'
         ordering = ['-time_registration']
         indexes = [
-            models.Index(fields=['phone_number'])
+            models.Index(fields=['phone_number', 'slug'])
         ]
 
 
