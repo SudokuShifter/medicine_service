@@ -6,7 +6,7 @@ from django.db import models
 
 
 class ScheduleDoctor(models.Model):
-    doctor = models.ForeignKey('Doctor', on_delete=models.PROTECT, related_name='doc', verbose_name='График Врача')
+    doctor = models.ForeignKey('doctor.Doctor', on_delete=models.PROTECT, related_name='doc', verbose_name='График Врача')
     start_at = models.DateTimeField(verbose_name='Время начала смены')
     end_at = models.DateTimeField(verbose_name='Время окончания смены')
 
@@ -25,9 +25,10 @@ class ScheduleDoctor(models.Model):
 class PatientRecord(models.Model):
     FIXED_APPOINTMENT_DURATION = timedelta(minutes=20)
 
-    patient = models.ForeignKey('user.Patient', on_delete=models.CASCADE, verbose_name='Пациент')
+    patient = models.ForeignKey('user.User', on_delete=models.CASCADE, verbose_name='Пациент')
     doctor = models.ForeignKey('doctor.Doctor', on_delete=models.PROTECT, verbose_name='Врач')
-    schedule = models.ForeignKey('ScheduleDoctor', on_delete=models.PROTECT, verbose_name='График Врача')
+    schedule = models.ForeignKey('ScheduleDoctor', on_delete=models.PROTECT,
+                                 verbose_name='График Врача', default=None)
     appointment_time = models.DateTimeField(verbose_name='Время записи')
 
     class Meta:
@@ -36,7 +37,7 @@ class PatientRecord(models.Model):
         ordering = ['-appointment_time']
         indexes = [
             models.Index(fields=['patient']),
-            models.Index(fields=['doctor', 'shedule']),
+            models.Index(fields=['doctor', 'schedule']),
         ]
 
     def __str__(self):
@@ -47,7 +48,7 @@ class PatientRecord(models.Model):
 
 
 class Appointments(models.Model):
-    patient = models.ForeignKey('user.Patient', on_delete=models.CASCADE, verbose_name='Пациент')
+    patient = models.ForeignKey('user.User', on_delete=models.CASCADE, verbose_name='Пациент')
     patient_record = models.ForeignKey('PatientRecord', on_delete=models.CASCADE, verbose_name='Запись')
     comment = models.TextField()
 
