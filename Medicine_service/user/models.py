@@ -7,7 +7,7 @@ from django.urls import reverse
 
 class SickPatients(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter()
+        return super().get_queryset().filter(status='SICK')
 
 
 class User(models.Model):
@@ -48,7 +48,8 @@ class User(models.Model):
         verbose_name_plural = 'Пациенты'
         ordering = ['-time_registration']
         indexes = [
-            models.Index(fields=['phone_number', 'slug'])
+            models.Index(fields=['phone_number']),
+            models.Index(fields=['slug'])
         ]
 
 
