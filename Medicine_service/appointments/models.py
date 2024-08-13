@@ -19,7 +19,7 @@ class ScheduleDoctor(models.Model):
         ]
 
     def __str__(self):
-        return f'{self.doctor} {self.start_at} {self.end_at}'
+        return f'Врач {self.doctor} с графиком работы: {self.start_at} - {self.end_at}'
 
 
 class PatientRecord(models.Model):
