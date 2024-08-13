@@ -33,7 +33,9 @@ class Doctor(models.Model):
         verbose_name_plural = 'Доктора'
         ordering = ['-time_registration']
         indexes = [
-            models.Index(fields=['phone_number', 'slug'])
+            models.Index(fields=['phone_number']),
+            models.Index(fields=['name', 'second_name']),
+            models.Index(fields=['slug'])
         ]
 
 
