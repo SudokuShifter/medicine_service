@@ -13,8 +13,7 @@ class UserHome(TemplateView):
         'menu': [
             {'title': 'Расписание врачей', 'url_name': 'schedule'},
             {'title': 'Записи', 'url_name': 'records'},
-            {'title': 'Назначения', 'url_name': 'appointments'},
-            {'title': 'Советы', 'url_name': 'recs'},
+            {'title': 'Личный кабинет', 'url_name': 'recs'},
             {'title': 'Войти', 'url_name': 'login'},
             {'title': 'Регистрация', 'url_name': 'register'},
         ]

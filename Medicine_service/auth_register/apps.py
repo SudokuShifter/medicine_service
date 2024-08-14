@@ -1,7 +1,6 @@
 from django.apps import AppConfig
 
 
-class DoctorConfig(AppConfig):
-    verbose_name = 'Доктора'
+class AuthRegisterConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'doctor'
+    name = 'auth_register'
