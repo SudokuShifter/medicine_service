@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'doctor.apps.DoctorConfig',
     'appointments.apps.AppointmentsConfig',
+    'auth_register.apps.AuthRegisterConfig'
 ]
 
 MIDDLEWARE = [

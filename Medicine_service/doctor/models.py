@@ -17,7 +17,7 @@ class Doctor(models.Model):
                                     related_name='doctor_pos', verbose_name='Должность врача')
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='Slug')
     account = models.OneToOneField('auth_register.Account', on_delete=models.CASCADE,
-                                   related_name='doctor_profile', verbose_name='Аккаунт врача')
+                                   related_name='doctor_profile', verbose_name='Аккаунт врача', default=None)
 
     def __str__(self):
         return f'{self.second_name} {self.name} {self.middle_name}'
@@ -28,7 +28,6 @@ class Doctor(models.Model):
     class Meta:
         verbose_name = 'Доктор'
         verbose_name_plural = 'Доктора'
-        ordering = ['-time_registration']
         indexes = [
             models.Index(fields=['name', 'second_name']),
             models.Index(fields=['slug'])

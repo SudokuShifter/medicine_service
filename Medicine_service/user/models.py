@@ -28,7 +28,7 @@ class User(models.Model):
                               verbose_name='Фото')
     status = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)))
     account = models.OneToOneField('auth_register.Account', on_delete=models.CASCADE,
-                                   related_name='patient_profile', verbose_name='Аккаунт Пациента')
+                                   related_name='patient_profile', verbose_name='Аккаунт Пациента', default=None)
 
     objects = models.Manager()
     sick_patients = SickPatients()
@@ -42,7 +42,6 @@ class User(models.Model):
     class Meta:
         verbose_name = 'Пациент'
         verbose_name_plural = 'Пациенты'
-        ordering = ['-time_registration']
         indexes = [
             models.Index(fields=['slug'])
         ]
