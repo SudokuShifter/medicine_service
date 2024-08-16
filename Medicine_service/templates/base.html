@@ -4,79 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
 
-        header {
-            background-color: #007BFF;
-            color: white;
-            padding: 20px 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+    <!-- Подключение Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-        .container {
-            width: 90%;
-            margin: 0 auto;
-            max-width: 1200px;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        nav {
-            margin-top: 10px;
-        }
-
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        nav ul li {
-            margin-left: 20px;
-        }
-
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-            transition: color 0.3s ease;
-        }
-
-        nav ul li a:hover {
-            color: #d4d4d4;
-        }
-    </style>
 </head>
 <body>
+    <header class="bg-primary text-white shadow-sm">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center py-3">
+                <div class="logo h1">Mr.Health</div>
+                <nav>
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#home">Расписание врачей</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#home">Записи</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#home">Личный Кабинет</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{% url 'auth' %}">Войти</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{% url 'register' %}">Регистрация</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
 
-<header>
-    <div class="container">
-        <div class="logo">Mr.Health</div>
-        <nav>
-            <ul>
-                {% for m in menu %}
-                <li><a href="#home">{{ m.title }}</a></li>
-                {% endfor %}
-            </ul>
+    {% block content %}
+    {% endblock %}
 
-        </nav>
-    </div>
-</header>
-
+    <!-- Подключение jQuery, Popper.js и Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-
-<!--% url m.url_name % вставить в href-->
