@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="form-container p-4 border rounded shadow-sm">
+                <h1 class="text-center mb-4">{{ title }}</h1>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- Используем form.as_p для автоматического форматирования формы с отступами -->
+                    {{ form.as_p }}
+
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
