@@ -11,7 +11,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 class AccountManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):
         if not email:
-            raise ValueError('Users must have an email address')
+            raise ValueError('Пользователь должен иметь электронную почту')
         email = self.normalize_email(email)
         user = self.model(email=email, username=username, **extra_fields)
         user.set_password(password)
@@ -43,8 +43,9 @@ class Account(AbstractBaseUser, PermissionsMixin):
         verbose_name='user permissions'
     )
 
+    manager = AccountManager()
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ['username', 'email', 'phone_number']
 
     class Meta:
         verbose_name = 'Аккаунт'
