@@ -13,9 +13,19 @@ class RegisterView(CreateView):
     template_name = 'auth_register/register_auth.html'
     success_url = reverse_lazy('home')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['button_title'] = 'Зарегистрироваться'
+        return context
+
 
 class AuthView(LoginView):
     form_class = LoginForm
     redirect_field_name = 'home'
     template_name = 'auth_register/register_auth.html'
     success_url = reverse_lazy('home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['button_title'] = 'Войти'
+        return context

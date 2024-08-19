@@ -26,7 +26,7 @@ class User(models.Model):
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='Slug')
     photo = models.ImageField(upload_to='photos/%Y/%m/%d/', default=None, blank=True, null=True,
                               verbose_name='Фото')
-    status = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)))
+    status = models.BooleanField(choices=[(0, 'Здоров'), (1, 'Болен')], default=0, verbose_name='Статус')
     account = models.OneToOneField('auth_register.Account', on_delete=models.CASCADE,
                                    related_name='patient_profile', verbose_name='Аккаунт Пациента', default=None)
 
