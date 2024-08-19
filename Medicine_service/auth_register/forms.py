@@ -7,11 +7,11 @@ from .models import Account
 class LoginForm(AuthenticationForm):
     username = forms.EmailField(
         label='Электронная почта',
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Эл. почта'})
     )
     password = forms.CharField(
         label='Пароль',
-        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль'})
     )
 
 
