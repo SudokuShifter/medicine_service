@@ -5,7 +5,7 @@ from .models import Account
 
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(
+    username = forms.EmailField(
         label='Электронная почта',
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
