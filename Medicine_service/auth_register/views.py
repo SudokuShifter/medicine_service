@@ -18,3 +18,4 @@ class AuthView(LoginView):
     form_class = LoginForm
     redirect_field_name = 'home'
     template_name = 'auth_register/register_auth.html'
+    success_url = reverse_lazy('home')
