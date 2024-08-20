@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
-from source.settings import INVITE_CODE
+from Medicine_service.source.settings import INVITE_CODE
 from .models import Account
 
 
@@ -38,5 +39,16 @@ class RegisterForm(forms.ModelForm):
     def clean_invite_code(self):
         invite_code = self.cleaned_data.get('invite_code')
         if invite_code == INVITE_CODE:
-            return
+            return invite_code
+        raise ValidationError('Вы ввели неверный инвайт-код')
 
+    def save(self, commit=True):
+        account = super().save(commit=False)
+        invite_code = self.cleaned_data.get('invite_code')
+        if invite_code == INVITE_CODE:
+            doctor_group, flag = Group.objects.get_or_create(name='Doctor')
+            account.is_doctor = True
+            account.groups.add(doctor_group)
+        if commit:
+            account.save()
+        return account
