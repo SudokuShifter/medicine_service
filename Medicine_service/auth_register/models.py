@@ -35,6 +35,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
                                      related_name='user_data', verbose_name='Данные пользователя')
     doctor_data = models.OneToOneField('doctor.Doctor', on_delete=models.CASCADE,
                                        related_name='doctor_data', verbose_name='Данные врача')
+    invite_code = models.CharField(max_length=20, null=True, blank=True, verbose_name='Инвайт код для врача')
 
     groups = models.ManyToManyField(
         Group,
