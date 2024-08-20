@@ -27,8 +27,6 @@ class User(models.Model):
     photo = models.ImageField(upload_to='photos/%Y/%m/%d/', default=None, blank=True, null=True,
                               verbose_name='Фото')
     status = models.BooleanField(choices=[(0, 'Здоров'), (1, 'Болен')], default=0, verbose_name='Статус')
-    account = models.OneToOneField('auth_register.Account', on_delete=models.CASCADE,
-                                   related_name='patient_profile', verbose_name='Аккаунт Пациента', default=None)
 
     objects = models.Manager()
     sick_patients = SickPatients()
