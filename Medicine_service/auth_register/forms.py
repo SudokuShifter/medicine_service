@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
-from Medicine_service.source.settings import INVITE_CODE
+from source.settings import INVITE_CODE
 from .models import Account
 
 
@@ -24,23 +24,25 @@ class RegisterForm(forms.ModelForm):
         widgets = {
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Эл. почта'}),
             'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Логин'}),
-            'password': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+7 999 999 99 99'}),
+            'password': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль'}),
             'invite_code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Инвайт код (если вы врач)'}),
         }
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
-        spec_symbols = ['_', '/', '.', ',', '-', '=']
+        spec_symbols = ['_', '/', '.', ',', '-', '=', '`']
         if len(password) > 6 and set(spec_symbols).intersection(set(password)):
             return password
-        raise ValidationError(f'Пароль должен иметь больше 6 символов и содержать спец-символы:{" ".join(spec_symbols)}')
+        raise ValidationError(f'Пароль должен иметь больше 6 символов и содержать спец-символы: {" ".join(spec_symbols)}')
 
     def clean_invite_code(self):
         invite_code = self.cleaned_data.get('invite_code')
-        if invite_code == INVITE_CODE:
-            return invite_code
-        raise ValidationError('Вы ввели неверный инвайт-код')
+        if invite_code:
+            if invite_code == INVITE_CODE:
+                return invite_code
+            else:
+                raise ValidationError('Вы ввели неверный инвайт-код')
 
     def save(self, commit=True):
         account = super().save(commit=False)

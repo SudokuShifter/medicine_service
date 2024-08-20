@@ -32,9 +32,9 @@ class Account(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(unique=True, max_length=20, validators=[MinLengthValidator(6)],
                                 verbose_name='Логин')
     user_data = models.OneToOneField('user.User', on_delete=models.CASCADE,
-                                     related_name='user_data', verbose_name='Данные пользователя')
+                                     related_name='user_data', verbose_name='Данные пользователя', default=None)
     doctor_data = models.OneToOneField('doctor.Doctor', on_delete=models.CASCADE,
-                                       related_name='doctor_data', verbose_name='Данные врача')
+                                       related_name='doctor_data', verbose_name='Данные врача', default=None)
     invite_code = models.CharField(max_length=20, null=True, blank=True, verbose_name='Инвайт код')
     is_doctor = models.BooleanField(default=False, verbose_name='Индикатор врач/пациент')
 
