@@ -133,3 +133,6 @@ __pypackages__/
 
 # pyright
 pyrightconfig.json
+
+# env files
+.src

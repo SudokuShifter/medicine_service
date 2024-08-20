@@ -25,22 +25,34 @@ class AccountManager(BaseUserManager):
 
 
 class Account(AbstractBaseUser, PermissionsMixin):
-    phone_number = PhoneNumberField(null=False, blank=False, unique=True, verbose_name='Номер телефона')
-    email = models.EmailField(unique=True, verbose_name='Электронная почта')
-    username = models.CharField(unique=True, max_length=20, validators=[MinLengthValidator(6)], verbose_name='Логин')
+    phone_number = PhoneNumberField(null=False, blank=False, unique=True,
+                                    verbose_name='Номер телефона')
+    email = models.EmailField(unique=True,
+                              verbose_name='Электронная почта')
+    username = models.CharField(unique=True, max_length=20, validators=[MinLengthValidator(6)],
+                                verbose_name='Логин')
+    user_data = models.OneToOneField('user.User', on_delete=models.CASCADE,
+                                     related_name='user_data', verbose_name='Данные пользователя',
+                                     null=True, default=None)
+    doctor_data = models.OneToOneField('doctor.Doctor', on_delete=models.CASCADE,
+                                       related_name='doctor_data', verbose_name='Данные врача',
+                                       null=True, default=None)
+    invite_code = models.CharField(max_length=20, null=True, blank=True, verbose_name='Инвайт код')
+    is_doctor = models.BooleanField(default=False, verbose_name='Индикатор врач/пациент')
+
     groups = models.ManyToManyField(
         Group,
         related_name='account_set',
         blank=True,
         help_text='The groups this user belongs to.',
-        verbose_name='groups'
+        verbose_name='Группы'
     )
     user_permissions = models.ManyToManyField(
         Permission,
         related_name='account_set',
         blank=True,
         help_text='Specific permissions for this user.',
-        verbose_name='user permissions'
+        verbose_name='Разрешения'
     )
 
     manager = AccountManager()

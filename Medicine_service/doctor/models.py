@@ -16,8 +16,6 @@ class Doctor(models.Model):
     position = models.OneToOneField('Position', on_delete=models.PROTECT,
                                     related_name='doctor_pos', verbose_name='Должность врача')
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='Slug')
-    account = models.OneToOneField('auth_register.Account', on_delete=models.CASCADE,
-                                   related_name='doctor_profile', verbose_name='Аккаунт врача', default=None)
 
     def __str__(self):
         return f'{self.second_name} {self.name} {self.middle_name}'
