@@ -52,5 +52,7 @@ class RegisterForm(forms.ModelForm):
             account.is_doctor = True
             account.groups.add(doctor_group)
         if commit:
+            account.set_password(self.cleaned_data['password'])
             account.save()
         return account
+

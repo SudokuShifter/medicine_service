@@ -1,5 +1,5 @@
 from django.contrib.auth.views import LoginView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import CreateView
 from .models import Account
 from django.contrib.auth.forms import AuthenticationForm
@@ -21,7 +21,6 @@ class RegisterView(CreateView):
 
 class AuthView(LoginView):
     authentication_form = LoginForm
-    redirect_field_name = 'home'
     template_name = 'auth_register/register_auth.html'
     success_url = reverse_lazy('lk')
 

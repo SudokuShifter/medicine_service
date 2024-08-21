@@ -2,6 +2,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.contrib.auth.models import Group, Permission, AbstractBaseUser, PermissionsMixin
+from django.urls import reverse
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -38,8 +39,9 @@ class Account(AbstractBaseUser, PermissionsMixin):
                                        null=True, default=None)
     invite_code = models.CharField(max_length=20, null=True, blank=True, verbose_name='Инвайт код')
     is_doctor = models.BooleanField(default=False, verbose_name='Индикатор врач/пациент')
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='Slug', default=username)
 
-    objects = AccountManager()  # <-- Обратите внимание на это изменение
+    objects = AccountManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'phone_number']
@@ -51,3 +53,6 @@ class Account(AbstractBaseUser, PermissionsMixin):
             models.Index(fields=['phone_number']),
             models.Index(fields=['email'])
         ]
+
+    def get_absolute_url(self):
+        return reverse('lk', kwargs={'slug': self.slug})

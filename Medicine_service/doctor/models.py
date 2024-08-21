@@ -15,20 +15,15 @@ class Doctor(models.Model):
                                    verbose_name='Отчество врача')
     position = models.OneToOneField('Position', on_delete=models.PROTECT,
                                     related_name='doctor_pos', verbose_name='Должность врача')
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='Slug')
 
     def __str__(self):
         return f'{self.second_name} {self.name} {self.middle_name}'
-
-    def get_absolute_url(self):
-        return reverse('doctor', kwargs={'doctor_slug': self.slug})
 
     class Meta:
         verbose_name = 'Доктор'
         verbose_name_plural = 'Доктора'
         indexes = [
-            models.Index(fields=['name', 'second_name']),
-            models.Index(fields=['slug'])
+            models.Index(fields=['name', 'second_name'])
         ]
 
 
