@@ -67,3 +67,4 @@ class RegisterForm(forms.ModelForm):
             account.save()
         return account
 
+

@@ -1,5 +1,6 @@
 from django.views.generic import TemplateView, DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
+from django.urls import reverse_lazy
 from .models import User
 from .forms import UserData
 from auth_register.models import Account
@@ -41,9 +42,17 @@ class UserProfileView(DetailView):
     slug_url_kwarg = 'slug'
 
     def get_object(self, queryset=None):
-        return Account.objects.select_related('user_data').get(slug=self.kwargs.get('slug'))
+        return Account.objects.get(slug=self.kwargs.get('slug'))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['slug'] = self.get_object().slug
         return context
+
+
+# class UserDataUpdate(UpdateView):
+#     fields = ['name', 'second_name', 'middle_name', 'birthday', 'address', 'photo']
+#     model = User
+#     template_name = 'user/edit_data.html'
+#     context_object_name = 'user'
+#     slug_url_kwarg = 'slug'

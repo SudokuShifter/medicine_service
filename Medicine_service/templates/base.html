@@ -15,6 +15,7 @@
             <div class="d-flex justify-content-between align-items-center py-3">
                 <div class="logo h1">Mr.Health</div>
                 <nav>
+                    {% if user.slug %}
                     <ul class="nav">
                         <li class="nav-item">
                             <a class="nav-link text-white" href="#home">Расписание врачей</a>
@@ -26,6 +27,19 @@
                             <a class="nav-link text-white" href="{% url 'profile' slug=user.slug %}">Личный Кабинет</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-white" href="{% url 'auth' %}">Выйти</a>
+                        </li>
+                    </ul>
+                </nav>
+                {% else %}
+                <ul class="nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#home">Расписание врачей</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{% url 'auth' %}">Личный Кабинет</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-white" href="{% url 'auth' %}">Войти</a>
                         </li>
                         <li class="nav-item">
@@ -33,6 +47,7 @@
                         </li>
                     </ul>
                 </nav>
+                {% endif %}
             </div>
         </div>
     </header>

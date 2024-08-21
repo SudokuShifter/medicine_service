@@ -2,8 +2,10 @@ from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import CreateView
-from .models import Account
 from django.contrib.auth.forms import AuthenticationForm
+
+from .models import Account
+from user.forms import UserData, UserAddressForm
 from .forms import RegisterForm, LoginForm
 # Create your views here.
 
@@ -29,6 +31,8 @@ class RegisterView(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['button_title'] = 'Зарегистрироваться'
+        context['user_form'] = UserData
+        context['user_address'] = UserAddressForm
         return context
 
 
