@@ -2,6 +2,9 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
+from django.utils.text import slugify
+from string import ascii_letters
+
 from source.settings import INVITE_CODE
 from .models import Account
 
@@ -36,6 +39,13 @@ class RegisterForm(forms.ModelForm):
             return password
         raise ValidationError(f'Пароль должен иметь больше 6 символов и содержать спец-символы: {" ".join(spec_symbols)}')
 
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        ascii_symbols = ascii_letters
+        if all(map(lambda x: x in ascii_symbols, username)):
+            return username
+        raise ValidationError('Имя должно состоять из латинских букв')
+
     def clean_invite_code(self):
         invite_code = self.cleaned_data.get('invite_code')
         if invite_code:
@@ -52,5 +62,8 @@ class RegisterForm(forms.ModelForm):
             account.is_doctor = True
             account.groups.add(doctor_group)
         if commit:
+            account.set_password(self.cleaned_data['password'])
+            account.slug = slugify(account.username)
             account.save()
         return account
+

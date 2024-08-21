@@ -23,7 +23,6 @@ class User(models.Model):
     birthday = models.DateField(verbose_name='Дата Рождения')
     address = models.OneToOneField('Address', on_delete=models.PROTECT,
                                    related_name='User_address', verbose_name='Адрес пациента')
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='Slug')
     photo = models.ImageField(upload_to='photos/%Y/%m/%d/', default=None, blank=True, null=True,
                               verbose_name='Фото')
     status = models.BooleanField(choices=[(0, 'Здоров'), (1, 'Болен')], default=0, verbose_name='Статус')
@@ -34,15 +33,9 @@ class User(models.Model):
     def __str__(self):
         return f'{self.second_name} {self.name} {self.middle_name}'
 
-    def get_absolute_url(self):
-        return reverse('patient', kwargs={'patient_slug': self.slug})
-
     class Meta:
         verbose_name = 'Пациент'
         verbose_name_plural = 'Пациенты'
-        indexes = [
-            models.Index(fields=['slug'])
-        ]
 
 
 class Address(models.Model):
