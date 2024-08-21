@@ -1,7 +1,7 @@
-from django.shortcuts import render
 from django.views.generic import TemplateView
-
-
+from django.views.generic.edit import CreateView
+from .models import User
+from .forms import UserData
 # Create your views here.
 
 
@@ -18,3 +18,14 @@ class UserHome(TemplateView):
             {'title': 'Регистрация', 'url_name': 'register'},
         ]
     }
+
+
+class UserLk(CreateView):
+    model = User
+    form_class = UserData
+    template_name = 'user/lk.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['button_title'] = 'Сохранить'
+        return context

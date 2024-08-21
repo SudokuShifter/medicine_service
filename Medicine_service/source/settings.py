@@ -132,3 +132,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 load_dotenv()
 INVITE_CODE = os.getenv('INVITE_CODE')
+AUTH_USER_MODEL = os.getenv('AUTH_USER_MODEL')
