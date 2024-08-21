@@ -23,7 +23,7 @@
                             <a class="nav-link text-white" href="#home">Записи</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="#home">Личный Кабинет</a>
+                            <a class="nav-link text-white" href="{% url 'profile' slug=user.slug %}">Личный Кабинет</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="{% url 'auth' %}">Войти</a>

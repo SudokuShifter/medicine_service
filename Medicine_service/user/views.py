@@ -1,7 +1,10 @@
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 from django.views.generic.edit import CreateView
 from .models import User
 from .forms import UserData
+from auth_register.models import Account
+
+
 # Create your views here.
 
 
@@ -28,4 +31,19 @@ class UserLk(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['button_title'] = 'Сохранить'
+        return context
+
+
+class UserProfileView(DetailView):
+    model = Account
+    template_name = 'user/lk.html'
+    context_object_name = 'user'
+    slug_url_kwarg = 'slug'
+
+    def get_object(self, queryset=None):
+        return Account.objects.select_related('user_data').get(slug=self.kwargs.get('slug'))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['slug'] = self.get_object().slug
         return context

@@ -1,38 +1,66 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container">
+<div class="container my-5">
     <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <div class="form-container p-4 border rounded shadow-sm">
-                <h1 class="text-center mb-4">{{ title }}</h1>
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        {% if form.non_field_errors %}
-                            <div class="alert alert-danger">
-                                {% for error in form.non_field_errors %}
-                                    <p>{{ error }}</p>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-
-                        {% for field in form %}
-                            {{ field.label_tag }}
-                            {{ field }}
-                            {% if field.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {% for error in field.errors %}
-                                        <p>{{ error }}</p>
-                                    {% endfor %}
-                                </div>
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-lg border-light">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h2>Личный Кабинет</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-4 mb-md-0">
+                            <!-- Фотография пользователя -->
+                            {% if user.user_data.photo %}
+                            <img src="{{ user.user_data.photo.url }}" alt="Фото пользователя" class="img-fluid rounded-circle" style="max-width: 200px; border: 5px solid #f8f9fa;">
+                            {% else %}
+                            <img src="{% static 'default_avatar.png' %}" alt="Фото пользователя" class="img-fluid rounded-circle" style="max-width: 200px; border: 5px solid #f8f9fa;">
                             {% endif %}
-                        {% endfor %}
+                        </div>
+                        <div class="col-md-8">
+                            <!-- Данные пользователя -->
+                            <h4 class="mb-3">{{ user.username }}</h4>
+                            <div class="list-group">
+                                <div class="list-group-item">
+                                    <strong>Имя:</strong> {{ user.user_data.name }}
+                                </div>
+                                <div class="list-group-item">
+                                    <strong>Фамилия:</strong> {{ user.user_data.second_name }}
+                                </div>
+                                <div class="list-group-item">
+                                    <strong>Отчество:</strong> {{ user.user_data.middle_name }}
+                                </div>
+                                <div class="list-group-item">
+                                    <strong>Дата рождения:</strong> {{ user.user_data.birthday }}
+                                </div>
+                                <div class="list-group-item">
+                                    <strong>Адрес:</strong> {{ user.user_data.address }}
+                                </div>
+                                <div class="list-group-item">
+                                    <strong>Электронная почта:</strong> {{ user.email }}
+                                </div>
+                                <div class="list-group-item">
+                                    <strong>Номер телефона:</strong> {{ user.phone_number }}
+                                </div>
+                                {% if user.is_doctor %}
+                                <div class="list-group-item bg-success text-white">
+                                    <strong>Вы врач!</strong>
+                                </div>
+                                {% else %}
+                                <div class="list-group-item bg-secondary text-white">
+                                    <strong>Вы не врач.</strong>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group text-center">
-                        <button type="submit" class="btn btn-primary">{{ button_title }}</button>
+                    <!-- Кнопка для редактирования профиля -->
+                    <div class="text-center mt-4">
+                        <a href="#home" class="btn btn-primary btn-lg">Редактировать профиль</a>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
