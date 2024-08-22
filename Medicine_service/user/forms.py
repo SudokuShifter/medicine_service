@@ -5,7 +5,7 @@ from .models import User, Address
 import datetime
 
 
-class UserData(forms.ModelForm):
+class UserDataForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['name', 'second_name', 'middle_name', 'birthday', 'address', 'photo']
@@ -23,6 +23,14 @@ class UserData(forms.ModelForm):
         if birthday > datetime.date.today():
             raise ValidationError('Введите корректную дату рождения')
         return birthday
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        account = self.request.user.account
+        user.account = account
+        if commit:
+            user.save()
+        return user
 
 
 class UserAddressForm(forms.ModelForm):
