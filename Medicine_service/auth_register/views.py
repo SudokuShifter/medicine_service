@@ -23,9 +23,7 @@ class RegisterView(CreateView):
         return response
 
     def get_success_url(self):
-        # Получаем только что зарегистрированного пользователя
-        user = self.object
-        return reverse('profile', kwargs={'slug': user.slug})
+        return reverse('profile', kwargs={'slug': self.object.slug})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

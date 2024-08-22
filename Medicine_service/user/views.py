@@ -1,8 +1,10 @@
+from django.shortcuts import render, redirect
+from django.views import View
 from django.views.generic import TemplateView, DetailView
-from django.views.generic.edit import CreateView, UpdateView
-from django.urls import reverse_lazy
-from .models import User
-from .forms import UserDataForm
+from django.http import HttpResponse
+
+from .models import User, Address
+from .forms import UserDataForm, UserAddressForm
 from auth_register.models import Account
 
 
@@ -31,8 +33,7 @@ class UserProfileView(DetailView):
     slug_url_kwarg = 'slug'
 
     def get_object(self, queryset=None):
-        account = Account.objects.get(slug=self.kwargs.get('slug'))
-        return account.user_data
+        return Account.objects.get(slug=self.kwargs.get('slug'))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -40,28 +41,36 @@ class UserProfileView(DetailView):
         return context
 
 
-class UserDataUpdate(UpdateView):
-    model = User  # Подразумеваем, что модель называется UserData
-    template_name = 'user/edit_data.html'
-    context_object_name = 'user_data'
-    slug_url_kwarg = 'slug'
-    form_class = UserDataForm  # Предполагается, что у вас есть форма UserDataForm
+class UserUpdateView(View):
+    def get(self, request, slug):
+        user = User.objects.get(user_data__slug=slug)  # Приводим к единому виду
+        address, created = Address.objects.get_or_create(user_address=user)  # Получаем или создаем адрес
 
-    def get_object(self, queryset=None):
-        # Получаем текущий аккаунт по slug
-        account = Account.objects.get(slug=self.kwargs.get('slug'))
-        # Проверяем, существует ли уже связанный объект User_data
-        if hasattr(account, 'user_data') and account.user_data:
-            return account.user_data
-        else:
-            # Если объект User_data не существует, создаем его
-            return User(user=account.user)
+        user_form = UserDataForm(instance=user)
+        address_form = UserAddressForm(instance=address)
 
-    def form_valid(self, form):
-        # Убедимся, что данные сохраняются
-        form.instance.user = self.get_object().user  # Устанавливаем пользователя для User_data
-        return super().form_valid(form)
+        return render(request, 'user/edit_data.html', {
+            'user_form': user_form,
+            'address_form': address_form,
+            'user': user,
+            'slug': slug
+        })
 
-    def get_success_url(self):
-        user = self.get_object().user
-        return reverse_lazy('profile', kwargs={'slug': user.account.slug})
+    def post(self, request, slug):
+        user = User.objects.get(user_data__slug=slug)  # Приводим к единому виду
+        address, created = Address.objects.get_or_create(user_address=user)  # Получаем или создаем адрес
+
+        user_form = UserDataForm(request.POST, request.FILES, instance=user)
+        address_form = UserAddressForm(request.POST, instance=address)
+
+        if user_form.is_valid() and address_form.is_valid():
+            user_form.save()
+            address_form.save()
+            return redirect('profile', slug=user.user_data.slug)  # Используем slug аккаунта
+
+        return render(request, 'user/edit_data.html', {
+            'user_form': user_form,
+            'address_form': address_form,
+            'user': user,
+            'slug': slug
+        })

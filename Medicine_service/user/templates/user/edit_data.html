@@ -14,41 +14,62 @@
                 <div class="card-body">
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                        {{ form.non_field_errors }}
+                        {{ user_form.non_field_errors }}
+                        {{ address_form.non_field_errors }}
 
                         <!-- Поля для фото -->
                         <div class="form-group text-center mb-4">
                             {% if user.photo %}
                                 <img src="{{ user.photo.url }}" alt="Profile Photo" class="img-thumbnail mb-3" style="width: 150px; height: 150px; object-fit: cover;">
                             {% else %}
-                                <img src="{% static 'images/default-profile.png' %}" alt="Default Photo" class="img-thumbnail mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                                <img src="{% static 'default_avatar.png' %}" alt="Default Photo" class="img-thumbnail mb-3" style="width: 150px; height: 150px; object-fit: cover;">
                             {% endif %}
-                            <label for="{{ form.photo.id_for_label }}" class="form-label">Фото профиля:</label>
-                            {{ form.photo }}
+                            <label for="{{ user_form.photo.id_for_label }}" class="form-label">Фото профиля:</label>
+                            {{ user_form.photo }}
                         </div>
 
-                        <!-- Поля для текста -->
+                        <!-- Поля для данных пользователя -->
                         <div class="form-group">
-                            {{ form.name.label_tag }}
-                            {{ form.name|add_class:"form-control" }}
+                            {{ user_form.name.label_tag }}
+                            {{ user_form.name|add_class:"form-control" }}
                         </div>
                         <div class="form-group">
-                            {{ form.second_name.label_tag }}
-                            {{ form.second_name|add_class:"form-control" }}
+                            {{ user_form.second_name.label_tag }}
+                            {{ user_form.second_name|add_class:"form-control" }}
                         </div>
                         <div class="form-group">
-                            {{ form.middle_name.label_tag }}
-                            {{ form.middle_name|add_class:"form-control" }}
+                            {{ user_form.middle_name.label_tag }}
+                            {{ user_form.middle_name|add_class:"form-control" }}
                         </div>
                         <div class="form-group">
-                            {{ form.birthday.label_tag }}
-                            {{ form.birthday|add_class:"form-control" }}
+                            {{ user_form.birthday.label_tag }}
+                            {{ user_form.birthday|add_class:"form-control" }}
                         </div>
 
-
+                        <!-- Поля для адреса -->
+                        <div class="form-group">
+                            {{ address_form.country.label_tag }}
+                            {{ address_form.country|add_class:"form-control" }}
+                        </div>
+                        <div class="form-group">
+                            {{ address_form.city.label_tag }}
+                            {{ address_form.city|add_class:"form-control" }}
+                        </div>
+                        <div class="form-group">
+                            {{ address_form.street.label_tag }}
+                            {{ address_form.street|add_class:"form-control" }}
+                        </div>
+                        <div class="form-group">
+                            {{ address_form.house_number.label_tag }}
+                            {{ address_form.house_number|add_class:"form-control" }}
+                        </div>
+                        <div class="form-group">
+                            {{ address_form.flat_number.label_tag }}
+                            {{ address_form.flat_number|add_class:"form-control" }}
+                        </div>
                         <div class="text-center mt-4">
                             <button type="submit" class="btn btn-success btn-lg">Сохранить изменения</button>
-                            <a href="{% url 'profile' slug=user.slug %}" class="btn btn-secondary btn-lg ml-2">Отмена</a>
+                            <a href="{% url 'profile' slug=slug %}" class="btn btn-secondary btn-lg ml-2">Отмена</a>
                         </div>
                     </form>
                 </div>
