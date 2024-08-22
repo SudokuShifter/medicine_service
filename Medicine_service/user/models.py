@@ -1,8 +1,7 @@
 from django.db import models
-from django.urls import reverse
-
 
 # Create your models here.
+
 
 class SickPatients(models.Manager):
     def get_queryset(self):
@@ -22,7 +21,7 @@ class User(models.Model):
                                    verbose_name='Отчество пациента')
     birthday = models.DateField(verbose_name='Дата Рождения')
     address = models.OneToOneField('Address', on_delete=models.PROTECT,
-                                   related_name='User_address', verbose_name='Адрес пациента',
+                                   related_name='user_address', verbose_name='Адрес пациента',
                                    default=None, blank=True, null=True)
     photo = models.ImageField(upload_to='photos/%Y/%m/%d/', default=None, blank=True, null=True,
                               verbose_name='Фото')
@@ -40,15 +39,15 @@ class User(models.Model):
 
 
 class Address(models.Model):
-    country = models.CharField(max_length=100, verbose_name='Страна')
-    city = models.CharField(max_length=100, verbose_name='Город')
-    street = models.CharField(max_length=100, verbose_name='Улица')
-    house_number = models.CharField(max_length=100, verbose_name='Номер и корпус дома')
-    flat_number = models.IntegerField(verbose_name='Номер квартиры')
+    country = models.CharField(max_length=100, verbose_name='Страна', blank=True, null=True)
+    city = models.CharField(max_length=100, verbose_name='Город', blank=True, null=True)
+    street = models.CharField(max_length=100, verbose_name='Улица', blank=True, null=True)
+    house_number = models.CharField(max_length=100, verbose_name='Номер и корпус дома', blank=True, null=True)
+    flat_number = models.IntegerField(verbose_name='Номер квартиры', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Адрес пациента'
         verbose_name_plural = 'Адреса пациентов'
 
     def __str__(self):
-        return f'{self.country} {self.city} {self.street} {self.house_number} {self.flat_number}'
+        return f'{self.country}, г.{self.city}, ул.{self.street}, д.{self.house_number}, кв.{self.flat_number}'

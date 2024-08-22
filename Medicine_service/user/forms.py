@@ -8,13 +8,12 @@ import datetime
 class UserDataForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['name', 'second_name', 'middle_name', 'birthday', 'address', 'photo']
+        fields = ['name', 'second_name', 'middle_name', 'birthday', 'photo']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя'}),
             'second_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Фамилия'}),
             'middle_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Отчество'}),
             'birthday': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),  # HTML5 date picker
-            'address': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Адрес'}),
             'photo': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
         }
 
@@ -26,8 +25,6 @@ class UserDataForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        account = self.request.user.account
-        user.account = account
         if commit:
             user.save()
         return user
