@@ -7,7 +7,6 @@
 
     <!-- Подключение Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
 </head>
 <body>
     <header class="bg-primary text-white shadow-sm">
@@ -15,7 +14,7 @@
             <div class="d-flex justify-content-between align-items-center py-3">
                 <a class="logo h1 text-white" href="{% url 'home' %}">Mr.Health</a>
                 <nav>
-                    {% if user.slug %}
+                    {% if request.user.is_authenticated %}
                     <ul class="nav">
                         <li class="nav-item">
                             <a class="nav-link text-white" href="#home">Расписание врачей</a>
@@ -24,15 +23,14 @@
                             <a class="nav-link text-white" href="#home">Записи</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'profile' slug=user.slug %}">Личный Кабинет</a>
+                            <a class="nav-link text-white" href="{% url 'profile' slug=slug %}">Личный Кабинет</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="{% url 'logout' %}">Выйти</a>
                         </li>
                     </ul>
-                </nav>
-                {% else %}
-                <ul class="nav">
+                    {% else %}
+                    <ul class="nav">
                         <li class="nav-item">
                             <a class="nav-link text-white" href="#home">Расписание врачей</a>
                         </li>
@@ -46,8 +44,8 @@
                             <a class="nav-link text-white" href="{% url 'register' %}">Регистрация</a>
                         </li>
                     </ul>
+                    {% endif %}
                 </nav>
-                {% endif %}
             </div>
         </div>
     </header>

@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import TemplateView, DetailView
-from django.views.generic.edit import CreateView, UpdateView
-from django.urls import reverse_lazy
+from django.http import HttpResponse
+
 from .models import User, Address
 from .forms import UserDataForm, UserAddressForm
 from auth_register.models import Account
@@ -52,12 +52,13 @@ class UserUpdateView(View):
         return render(request, 'user/edit_data.html', {
             'user_form': user_form,
             'address_form': address_form,
-            'user': user
+            'user': user,
+            'slug': slug
         })
 
     def post(self, request, slug):
         user = User.objects.get(user_data__slug=slug)  # Приводим к единому виду
-        address, created = Address.objects.get_or_create(user=user)  # Получаем или создаем адрес
+        address, created = Address.objects.get_or_create(user_address=user)  # Получаем или создаем адрес
 
         user_form = UserDataForm(request.POST, request.FILES, instance=user)
         address_form = UserAddressForm(request.POST, instance=address)
@@ -65,10 +66,11 @@ class UserUpdateView(View):
         if user_form.is_valid() and address_form.is_valid():
             user_form.save()
             address_form.save()
-            return redirect('profile', slug=user.account_data.slug)  # Используем slug аккаунта
+            return redirect('profile', slug=user.user_data.slug)  # Используем slug аккаунта
 
         return render(request, 'user/edit_data.html', {
             'user_form': user_form,
             'address_form': address_form,
             'user': user,
+            'slug': slug
         })

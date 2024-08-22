@@ -43,6 +43,13 @@ class RegisterForm(forms.ModelForm):
     birthday = forms.DateField(required=True, widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}))
     photo = forms.ImageField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
 
+    def clean_photo(self):
+        photo = self.cleaned_data.get('photo')
+        format_img = ['jpg', 'png']
+        if photo.split('.')[-1] not in format_img:
+            raise ValidationError(f'Неверный формат фотографии. Разрешение файла должно быть: {" ".join(format_img)}')
+        return photo
+
     def clean_password(self):
         password = self.cleaned_data.get('password')
         spec_symbols = ['_', '/', '.', ',', '-', '=', '']

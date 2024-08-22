@@ -19,8 +19,8 @@
 
                         <!-- Поля для фото -->
                         <div class="form-group text-center mb-4">
-                            {% if user.user_data.photo %}
-                                <img src="{{ user.user_data.photo.url }}" alt="Profile Photo" class="img-thumbnail mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                            {% if user.photo %}
+                                <img src="{{ user.photo.url }}" alt="Profile Photo" class="img-thumbnail mb-3" style="width: 150px; height: 150px; object-fit: cover;">
                             {% else %}
                                 <img src="{% static 'default_avatar.png' %}" alt="Default Photo" class="img-thumbnail mb-3" style="width: 150px; height: 150px; object-fit: cover;">
                             {% endif %}
@@ -69,7 +69,7 @@
                         </div>
                         <div class="text-center mt-4">
                             <button type="submit" class="btn btn-success btn-lg">Сохранить изменения</button>
-                            <a href="{% url 'profile' slug=user.account.slug %}" class="btn btn-secondary btn-lg ml-2">Отмена</a>
+                            <a href="{% url 'profile' slug=slug %}" class="btn btn-secondary btn-lg ml-2">Отмена</a>
                         </div>
                     </form>
                 </div>
