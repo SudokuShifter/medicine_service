@@ -2,7 +2,7 @@ from django.views.generic import TemplateView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 from .models import User
-from .forms import UserData
+from .forms import UserDataForm
 from auth_register.models import Account
 
 
@@ -24,17 +24,6 @@ class UserHome(TemplateView):
     }
 
 
-class UserLk(CreateView):
-    model = User
-    form_class = UserData
-    template_name = 'user/lk.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['button_title'] = 'Сохранить'
-        return context
-
-
 class UserProfileView(DetailView):
     model = Account
     template_name = 'user/lk.html'
@@ -42,7 +31,8 @@ class UserProfileView(DetailView):
     slug_url_kwarg = 'slug'
 
     def get_object(self, queryset=None):
-        return Account.objects.get(slug=self.kwargs.get('slug'))
+        account = Account.objects.get(slug=self.kwargs.get('slug'))
+        return account.user_data
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -50,9 +40,28 @@ class UserProfileView(DetailView):
         return context
 
 
-# class UserDataUpdate(UpdateView):
-#     fields = ['name', 'second_name', 'middle_name', 'birthday', 'address', 'photo']
-#     model = User
-#     template_name = 'user/edit_data.html'
-#     context_object_name = 'user'
-#     slug_url_kwarg = 'slug'
+class UserDataUpdate(UpdateView):
+    model = User  # Подразумеваем, что модель называется UserData
+    template_name = 'user/edit_data.html'
+    context_object_name = 'user_data'
+    slug_url_kwarg = 'slug'
+    form_class = UserDataForm  # Предполагается, что у вас есть форма UserDataForm
+
+    def get_object(self, queryset=None):
+        # Получаем текущий аккаунт по slug
+        account = Account.objects.get(slug=self.kwargs.get('slug'))
+        # Проверяем, существует ли уже связанный объект User_data
+        if hasattr(account, 'user_data') and account.user_data:
+            return account.user_data
+        else:
+            # Если объект User_data не существует, создаем его
+            return User(user=account.user)
+
+    def form_valid(self, form):
+        # Убедимся, что данные сохраняются
+        form.instance.user = self.get_object().user  # Устанавливаем пользователя для User_data
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        user = self.get_object().user
+        return reverse_lazy('profile', kwargs={'slug': user.account.slug})
