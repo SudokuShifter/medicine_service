@@ -22,7 +22,8 @@ class User(models.Model):
                                    verbose_name='Отчество пациента')
     birthday = models.DateField(verbose_name='Дата Рождения')
     address = models.OneToOneField('Address', on_delete=models.PROTECT,
-                                   related_name='User_address', verbose_name='Адрес пациента', default=None)
+                                   related_name='User_address', verbose_name='Адрес пациента',
+                                   default=None, blank=True, null=True)
     photo = models.ImageField(upload_to='photos/%Y/%m/%d/', default=None, blank=True, null=True,
                               verbose_name='Фото')
     status = models.BooleanField(choices=[(0, 'Здоров'), (1, 'Болен')], default=0, verbose_name='Статус')
