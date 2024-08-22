@@ -1,5 +1,5 @@
 from django.contrib.auth import login
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import AuthenticationForm
@@ -58,3 +58,7 @@ class AuthView(LoginView):
         context = super().get_context_data(**kwargs)
         context['button_title'] = 'Войти'
         return context
+
+
+class Logout(LogoutView):
+    next_page = reverse_lazy('auth')
