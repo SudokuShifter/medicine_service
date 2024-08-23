@@ -7,7 +7,7 @@ from django.core.files.images import get_image_dimensions
 
 import magic
 from string import ascii_letters
-import datetimeз
+import datetime
 
 from source.settings import INVITE_CODE
 from .models import Account
