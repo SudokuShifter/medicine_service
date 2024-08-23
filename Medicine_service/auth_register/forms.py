@@ -3,7 +3,11 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
+from django.core.files.images import get_image_dimensions
+
+import magic
 from string import ascii_letters
+import datetime
 
 from source.settings import INVITE_CODE
 from .models import Account
@@ -45,10 +49,41 @@ class RegisterForm(forms.ModelForm):
 
     def clean_photo(self):
         photo = self.cleaned_data.get('photo')
-        format_img = ['jpg', 'png']
-        if photo.split('.')[-1] not in format_img:
-            raise ValidationError(f'Неверный формат фотографии. Разрешение файла должно быть: {" ".join(format_img)}')
+        if not photo:
+            return photo
+
+        # MIME-тип проверки
+        mime = magic.Magic(mime=True)
+        mime_type = mime.from_buffer(photo.read(1024))
+        valid_mime_types = ['image/jpeg', 'image/png']
+
+        if mime_type not in valid_mime_types:
+            raise ValidationError('Неверный формат фотографии. Разрешение файла должно быть JPG или PNG.')
+
+        # Проверка размера файла (например, 5 МБ)
+        if photo.size > 5 * 1024 * 1024:
+            raise ValidationError('Размер файла слишком большой (максимум 5 МБ).')
+
+        # Проверка размера изображения
+        width, height = get_image_dimensions(photo)
+        if width > 5000 or height > 5000:
+            raise ValidationError('Разрешение изображения слишком большое (максимум 5000x5000 пикселей).')
+
         return photo
+
+    def clean_birthday(self):
+        birthday = self.cleaned_data.get('birthday')
+        if birthday > datetime.date.today():
+            raise ValidationError('Введите корректную дату рождения')
+
+        return birthday
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save()
+
+        return user
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
