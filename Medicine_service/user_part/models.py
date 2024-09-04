@@ -9,6 +9,10 @@ from datetime import timedelta
 
 
 class MedUser(User):
+    """
+    Класс MedUser - класс пользователя для входа и регистрации.
+    Был отнаследован от класса User для расширения функциональности
+    """
     username = models.CharField(
         max_length=150,
         unique=True, verbose_name='Логин',
@@ -22,9 +26,19 @@ class MedUser(User):
 
 
 class UserProfile(models.Model):
+    """
+    Класс UserProfile - класс с пользовательской информацией, которая будет доступна пользователю в личном кабинете.
+    Класс имеет связь с моделью MedUser, так чтобы каждый профиль был связан с конкретной учётной записью
+    Из экземпляра модели MedUser можно доставать данные по UserProfile через параметр related_name - то есть 'account'.
+    Например: self.user.user_profile
+
+    Так же имеет связь с моделью Records.
+    Чтобы запросить записи к врачам, нужно сделать следующее:
+    self.user.user_profile.records
+    """
     user = models.OneToOneField(
         'MedUser', on_delete=models.CASCADE,
-        related_name='account')
+        related_name='user_profile')
     name = models.CharField(
         max_length=150,
         verbose_name='Имя пациента')
@@ -54,9 +68,45 @@ class UserProfile(models.Model):
 
 
 class DoctorProfile(models.Model):
-    user_profile = models.OneToOneField(
-        'UserProfile', on_delete=models.CASCADE,
-        related_name='doctor_profile')
+    """
+    Класс DoctorProfile - класс профиля доктора, который будет доступен в личном кабинете.
+    Класс имеет связь с моделью MedProfile, так чтобы один профиль доктора был связан с одной
+    учётной записью. Из экземпляра модели MedUser можно доставать данные по DoctorProfile
+    через параметр related_name - то есть 'doctor_profile'.
+    Например: self.user.doctor_profile
+
+    Так же имеет связь через внешний ключ (Один ко многим), где у одного врача может быть лишь 1 категория,
+    а в 1 категории множество врачей с моделью Position.
+    Чтобы через должность посмотреть всех врачей, необходимо сделать следующее:
+    self.position.doctors
+
+    Так же имеет связь с моделью ScheduleDoctor.
+    Чтобы запросить график работы, нужно сделать следующее:
+    self.user.doctor_profile.schedules
+
+    Так же имеет связь с моделью Records.
+    Чтобы запросить записи пациентов, нужно сделать следующее:
+    self.user.doctor_profile.records
+    """
+    user = models.OneToOneField(
+        'MedUser', on_delete=models.CASCADE,
+        related_name='user_profile')
+    name = models.CharField(
+        max_length=150,
+        verbose_name='Имя пациента')
+    second_name = models.CharField(
+        max_length=150,
+        verbose_name='Фамилия пациента')
+    middle_name = models.CharField(
+        max_length=150,
+        verbose_name='Отчество пациента',
+        blank=True, null=True)
+    photo = models.ImageField(
+        upload_to='photos/%Y/%m/%d/',
+        verbose_name='Фото',
+        default=None, blank=True, null=True)
+    created = models.DateTimeField(
+        auto_now_add=True)
     position = models.ForeignKey(
         'Position', on_delete=models.PROTECT,
         verbose_name='Должность врача', related_name='doctors')
@@ -67,6 +117,13 @@ class DoctorProfile(models.Model):
 
 
 class Address(models.Model):
+    """
+    Класс Адрес - класс для хранения данных об адресе пациента и врача,
+    которые будут отображены в соотв личных кабинетах. Класс имеет связь с моделью Profile,
+    так чтобы каждый профиль был связан с конкретной записью об адресе.
+    Из модели UserProfile можно вытягивать адрес по параметру related_name - то есть 'address'.
+    Например: self.user.user_profile.address
+    """
     country = models.CharField(
         max_length=100,
         verbose_name='Страна',
@@ -87,7 +144,7 @@ class Address(models.Model):
         verbose_name='Номер квартиры',
         blank=True, null=True)
     profile = models.OneToOneField(
-        'Profile', on_delete=models.CASCADE,
+        'UserProfile', on_delete=models.CASCADE,
         related_name='address')
 
     class Meta:
@@ -99,6 +156,11 @@ class Address(models.Model):
 
 
 class Position(models.Model):
+    """
+    Класс Position - класс для определения должности врача.
+    Чтобы через должность посмотреть всех врачей, необходимо сделать следующее:
+    self.position.doctors
+    """
     title = models.CharField(
         max_length=255,
         unique=True,
@@ -117,6 +179,12 @@ class Position(models.Model):
 
 
 class ScheduleDoctor(models.Model):
+    """
+    Класс ScheduleDoctor - класс для определения расписания врача.
+    Задаёт диапазон рабочего времени в рамках определённой даты.
+    Имеет связь с моделью DoctorProfile, так чтобы у одного врача могло быть много рабочих смен,
+    но конкретно эти смены принадлежали определённому врачу.
+    """
     doctor = models.ForeignKey(
         'DoctorProfile', on_delete=models.PROTECT,
         related_name='schedules')
@@ -138,6 +206,16 @@ class ScheduleDoctor(models.Model):
 
 
 class PatientRecord(models.Model):
+    """
+    Класс PatientRecord - класс, отвечающий за запись пациента к врачу на определённую дату и время.
+    Имеет связь с моделью UserProfile, так чтобы у одного пациента могло быть много записей,
+    но при этом конкретная запись принадлежала лишь 1-му пациенту.
+    Имеет связь с моделью DoctorProfile, так чтобы у одного врача могло быть много записей,
+    но конкретная запись принадлежала лишь 1-му врачу.
+
+    Время посещения врача фиксировано: FIXED_APPOINTMENT_DURATION
+    """
+
     FIXED_APPOINTMENT_DURATION = timedelta(minutes=20)
 
     patient = models.ForeignKey(
