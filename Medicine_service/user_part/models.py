@@ -8,27 +8,10 @@ from datetime import timedelta
 # Create your models here.
 
 
-class MedUser(User):
-    """
-    Класс MedUser - класс пользователя для входа и регистрации.
-    Был отнаследован от класса User для расширения функциональности
-    """
-    username = models.CharField(
-        max_length=150,
-        unique=True, verbose_name='Логин',
-        validators=MinLengthValidator(6))
-    email = models.EmailField(
-        max_length=150,
-        unique=True, verbose_name='Эл.почта')
-    slug = models.SlugField(
-        default=slugify(username),
-        unique=True, verbose_name='Slug')
-
-
 class UserProfile(models.Model):
     """
     Класс UserProfile - класс с пользовательской информацией, которая будет доступна пользователю в личном кабинете.
-    Класс имеет связь с моделью MedUser, так чтобы каждый профиль был связан с конкретной учётной записью
+    Класс имеет связь с моделью User, так чтобы каждый профиль был связан с конкретной учётной записью
     Из экземпляра модели MedUser можно доставать данные по UserProfile через параметр related_name - то есть 'account'.
     Например: self.user.user_profile
 
@@ -37,7 +20,7 @@ class UserProfile(models.Model):
     self.user.user_profile.records
     """
     user = models.OneToOneField(
-        'MedUser', on_delete=models.CASCADE,
+        User, on_delete=models.CASCADE,
         related_name='user_profile')
     name = models.CharField(
         max_length=150,
@@ -57,6 +40,10 @@ class UserProfile(models.Model):
         default=None, blank=True, null=True)
     created = models.DateTimeField(
         auto_now_add=True)
+    slug = models.SlugField(
+        max_length=150,
+        verbose_name='slug',
+        default=slugify(name))
 
     def __str__(self):
         return f'{self.second_name} {self.name} {self.middle_name}'
@@ -89,17 +76,17 @@ class DoctorProfile(models.Model):
     self.user.doctor_profile.records
     """
     user = models.OneToOneField(
-        'MedUser', on_delete=models.CASCADE,
-        related_name='user_profile')
+        User, on_delete=models.CASCADE,
+        related_name='doctor_profile')
     name = models.CharField(
         max_length=150,
-        verbose_name='Имя пациента')
+        verbose_name='Имя врача')
     second_name = models.CharField(
         max_length=150,
-        verbose_name='Фамилия пациента')
+        verbose_name='Фамилия врача')
     middle_name = models.CharField(
         max_length=150,
-        verbose_name='Отчество пациента',
+        verbose_name='Отчество врача',
         blank=True, null=True)
     photo = models.ImageField(
         upload_to='photos/%Y/%m/%d/',
