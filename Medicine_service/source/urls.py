@@ -20,10 +20,7 @@ from django.urls import path, include
 from . import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('user.urls')),
-    path('doctor/', include('doctor.urls')),
-    path('auth_reg/', include('auth_register.urls')),
+    path('admin/', admin.site.urls)
 ]
 
 if settings.DEBUG:
