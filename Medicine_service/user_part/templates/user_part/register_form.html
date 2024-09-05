@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<body class="text-center">
+<main class="form-signin w-100 m-auto mt-5 mb-5 py-5" style="max-width: 400px;">
+    <form>
+        <img class="mb-4" src="{% static 'icons/logo.svg' %}" alt="" width="200" height="57">
+        <h1 class="h3 mb-3 fw-normal">Регистрация</h1>
+
+        <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="floatingName" placeholder="Иван Иванов">
+            <label for="floatingName">Ваше Имя</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="floatingLogin" placeholder="12345qwerty">
+            <label for="floatingLogin">Логин</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="floatingEmail" placeholder="name@example.com">
+            <label for="floatingEmail">Эл. Почта</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="floatingPassword1" placeholder="12345qwerty">
+            <label for="floatingPassword1">Пароль</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="floatingPassword2" placeholder="12345qwerty">
+            <label for="floatingPassword2">Подтверждение пароля</label>
+        </div>
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" value="remember-me"> Запомнить меня
+            </label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
+        <p class="mt-5 mb-3 text-muted">© 2024</p>
+    </form>
+</main>
+</body>
+
+{% endblock %}

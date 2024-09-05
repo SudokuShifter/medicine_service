@@ -7,5 +7,9 @@ def home(request):
     return render(request, 'user_part/home.html')
 
 
-# def register(request):
-#     return render(request, 'user_part/register_auth')
+def login(request):
+    return render(request, 'user_part/login_form.html')
+
+
+def register(request):
+    return render(request, 'user_part/register_form.html')
