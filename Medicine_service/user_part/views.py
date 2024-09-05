@@ -4,4 +4,8 @@ from django.shortcuts import render
 
 
 def home(request):
-    return render(request, 'user_part/register_auth.html')
+    return render(request, 'user_part/home.html')
+
+
+# def register(request):
+#     return render(request, 'user_part/register_auth')
