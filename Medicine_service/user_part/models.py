@@ -1,4 +1,3 @@
-from django.core.validators import MinLengthValidator
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
@@ -58,7 +57,7 @@ class DoctorProfile(models.Model):
     """
     Класс DoctorProfile - класс профиля доктора, который будет доступен в личном кабинете.
     Класс имеет связь с моделью MedProfile, так чтобы один профиль доктора был связан с одной
-    учётной записью. Из экземпляра модели MedUser можно доставать данные по DoctorProfile
+    учётной записью. Из экземпляра модели User можно доставать данные по DoctorProfile
     через параметр related_name - то есть 'doctor_profile'.
     Например: self.user.doctor_profile
 
