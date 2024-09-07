@@ -94,8 +94,10 @@ class DoctorProfile(models.Model):
     created = models.DateTimeField(
         auto_now_add=True)
     position = models.ForeignKey(
-        'Position', on_delete=models.PROTECT,
-        verbose_name='Должность врача', related_name='doctors')
+        'Position',
+        on_delete=models.PROTECT,
+        verbose_name='Должность врача',
+        related_name='doctors')
 
     class Meta:
         verbose_name = 'Доктор'
@@ -151,10 +153,11 @@ class Position(models.Model):
         max_length=255,
         unique=True,
         verbose_name='Должность врача')
-    description = models.TextField(max_length=1000,
-                                   blank=True, null=True,
-                                   default='Описание должности',
-                                   verbose_name='Описание должности')
+    description = models.TextField(
+        max_length=1000,
+        blank=True, null=True,
+        default='Описание должности',
+        verbose_name='Описание должности')
 
     class Meta:
         verbose_name = 'Должность'
@@ -172,7 +175,8 @@ class ScheduleDoctor(models.Model):
     но конкретно эти смены принадлежали определённому врачу.
     """
     doctor = models.ForeignKey(
-        'DoctorProfile', on_delete=models.PROTECT,
+        'DoctorProfile',
+        on_delete=models.PROTECT,
         related_name='schedules')
     start_at = models.DateTimeField(
         verbose_name='Время начала смены')
@@ -205,21 +209,24 @@ class PatientRecord(models.Model):
     FIXED_APPOINTMENT_DURATION = timedelta(minutes=20)
 
     patient = models.ForeignKey(
-        'UserProfile', on_delete=models.CASCADE,
+        'UserProfile',
+        on_delete=models.CASCADE,
         verbose_name='Пациент',
         related_name='records')
     doctor = models.ForeignKey(
-        'DoctorProfile', on_delete=models.PROTECT,
+        'DoctorProfile',
+        on_delete=models.PROTECT,
         verbose_name='Врач',
         related_name='records')
     schedule = models.ForeignKey(
-        'ScheduleDoctor', on_delete=models.PROTECT,
-        default=None, related_name='records')
+        'ScheduleDoctor',
+        on_delete=models.PROTECT,
+        default=None,
+        related_name='records')
     appointment_time = models.DateTimeField(
         verbose_name='Время записи')
     description = models.TextField(
-        default='Заметки врача',
-        verbose_name='История болезни')
+        verbose_name='Заметки врача')
 
     class Meta:
         verbose_name = 'Запись пациента'
@@ -235,3 +242,19 @@ class PatientRecord(models.Model):
 
     def get_end_time(self):
         return self.appointment_time + self.FIXED_APPOINTMENT_DURATION
+
+
+class PatientStory(models.Model):
+    patient = models.OneToOneField(
+        UserProfile,
+        on_delete=models.CASCADE,
+        verbose_name='История болезни пациента',
+        related_name='story')
+    doctor = models.ForeignKey(
+        DoctorProfile,
+        on_delete=models.PROTECT,
+        verbose_name='История болезни пациента',
+        related_name='story_patient'
+    )
+    description = models.TextField(
+        blank=True, null=True)
