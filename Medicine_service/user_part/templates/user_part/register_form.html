@@ -1,40 +1,39 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 {% block content %}
 
 <body class="text-center">
 <main class="form-signin w-100 m-auto mt-5 mb-5 py-5" style="max-width: 400px;">
-    <form>
+    <form method="post">
+        {% csrf_token %}
         <img class="mb-4" src="{% static 'icons/logo.svg' %}" alt="" width="200" height="57">
         <h1 class="h3 mb-3 fw-normal">Регистрация</h1>
 
+        <!-- Обработка ошибок формы -->
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            Проверьте правильность введённых данных
+        </div>
+        {% endif %}
         <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingName" placeholder="Иван Иванов">
-            <label for="floatingName">Ваше Имя</label>
+            {{ form.username|add_class:"form-control" }}
+            <label for="id_username">Логин</label>
         </div>
         <div class="form-floating mb-3">
-            <input type="password" class="form-control" id="floatingLogin" placeholder="12345qwerty">
-            <label for="floatingLogin">Логин</label>
+            {{ form.email|add_class:"form-control" }}
+            <label for="id_email">Эл. Почта</label>
         </div>
         <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingEmail" placeholder="name@example.com">
-            <label for="floatingEmail">Эл. Почта</label>
+            {{ form.password1|add_class:"form-control" }}
+            <label for="id_password1">Пароль</label>
         </div>
         <div class="form-floating mb-3">
-            <input type="password" class="form-control" id="floatingPassword1" placeholder="12345qwerty">
-            <label for="floatingPassword1">Пароль</label>
-        </div>
-        <div class="form-floating mb-3">
-            <input type="password" class="form-control" id="floatingPassword2" placeholder="12345qwerty">
-            <label for="floatingPassword2">Подтверждение пароля</label>
+            {{ form.password2|add_class:"form-control" }}
+            <label for="id_password2">Подтверждение пароля</label>
         </div>
 
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" value="remember-me"> Запомнить меня
-            </label>
-        </div>
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Зарегистрироваться</button>
         <p class="mt-5 mb-3 text-muted">© 2024</p>
     </form>
 </main>

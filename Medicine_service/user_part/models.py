@@ -39,10 +39,6 @@ class UserProfile(models.Model):
         default=None, blank=True, null=True)
     created = models.DateTimeField(
         auto_now_add=True)
-    slug = models.SlugField(
-        max_length=150,
-        verbose_name='slug',
-        default=slugify(name))
 
     def __str__(self):
         return f'{self.second_name} {self.name} {self.middle_name}'
@@ -98,6 +94,9 @@ class DoctorProfile(models.Model):
         on_delete=models.PROTECT,
         verbose_name='Должность врача',
         related_name='doctors')
+
+    def __str__(self):
+        return f'{self.name} {self.second_name} {self.middle_name} в должности {self.position}'
 
     class Meta:
         verbose_name = 'Доктор'
