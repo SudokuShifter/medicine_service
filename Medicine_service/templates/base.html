@@ -12,54 +12,58 @@
 <body>
 
 <div class="container">
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-        <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none"
-           style="width: auto;">
+    <header class="d-flex flex-wrap align-items-center justify-content-between py-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center text-dark text-decoration-none" style="width: auto;">
             <img src="{% static 'icons/logo.svg' %}" alt="Logo" width="120" height="32">
         </a>
 
-        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="{% url 'home' %}" class="nav-link px-2 link-secondary">Главная</a></li>
-            <li><a href="#" class="nav-link px-2 link-dark">Расписание врачей</a></li>
-            <li><a href="#" class="nav-link px-2 link-dark">Записи</a></li>
+        <div class="d-flex flex-grow-1 justify-content-center">
+            <ul class="nav mb-2 justify-content-center">
+                <li><a href="{% url 'home' %}" class="nav-link px-2 link-secondary">Главная</a></li>
+                <li><a href="#" class="nav-link px-2 link-dark">Расписание врачей</a></li>
+                <li><a href="#" class="nav-link px-2 link-dark">Записи</a></li>
+                {% if user.is_authenticated %}
+                    {% if user.user_profile.slug %}
+                        <li><a href="{% url 'lk' slug=user.user_profile.slug %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>
+                    {% else %}
+                        <li><a href="{% url 'first_create' %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>
+                    {% endif %}
+                {% else %}
+                    <li><a href="{% url 'login' %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>
+                {% endif %}
+                <li><a href="#" class="nav-link px-2 link-dark">FAQ</a></li>
+            </ul>
+        </div>
+
+        <div class="text-end">
             {% if user.is_authenticated %}
-            <li><a href="{% url 'lk' slug=user.user_profile.slug %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>
+                <a href="{% url 'logout' %}" class="btn btn-outline-primary me-2">Выйти</a>
             {% else %}
-            <li><a href="{% url 'login' %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>
+                <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Войти</a>
+                <a href="{% url 'register' %}" class="btn btn-primary">Регистрация</a>
             {% endif %}
-            <li><a href="#" class="nav-link px-2 link-dark">FAQ</a></li>
-        </ul>
-        {% if user.is_authenticated %}
-        <div class="col-md-3 text-end">
-            <a href="{% url 'logout' %}" class="btn btn-outline-primary me-2">Выйти</a>
         </div>
-        {% else %}
-        <div class="col-md-3 text-end">
-            <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Войти</a>
-            <a href="{% url 'register' %}" class="btn btn-primary">Регистрация</a>
-        </div>
-        {% endif %}
     </header>
 </div>
 {% block content %}
 {% endblock %}
 <div class="container">
-  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-    <p class="col-md-4 mb-0 text-muted">© 2024 Mr.Health, Inc</p>
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+        <p class="col-md-4 mb-0 text-muted">© 2024 Mr.Health, Inc</p>
 
-    <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none"
+        <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none"
            style="width: auto;">
             <img src="{% static 'icons/logo.svg' %}" alt="Logo" width="120" height="32">
         </a>
 
-    <ul class="nav col-md-4 justify-content-end">
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Главная</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Расписание врачей</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Записи</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Личный кабинет</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQ</a></li>
-    </ul>
-  </footer>
+        <ul class="nav col-md-4 justify-content-end">
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Главная</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Расписание врачей</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Записи</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Личный кабинет</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQ</a></li>
+        </ul>
+    </footer>
 </div>
 </body>
 </html>
