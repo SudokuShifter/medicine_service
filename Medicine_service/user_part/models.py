@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
-from datetime import timedelta
+import datetime
 
 
 # Create your models here.
@@ -20,25 +20,31 @@ class UserProfile(models.Model):
     """
     user = models.OneToOneField(
         User, on_delete=models.CASCADE,
-        related_name='user_profile')
+        related_name='user_profile',
+        blank=True, null=True)
     name = models.CharField(
         max_length=150,
-        verbose_name='Имя пациента')
+        verbose_name='Имя пациента',
+        blank=True, null=True)
     second_name = models.CharField(
         max_length=150,
-        verbose_name='Фамилия пациента')
+        verbose_name='Фамилия пациента',
+        blank=True, null=True)
     middle_name = models.CharField(
         max_length=150,
         verbose_name='Отчество пациента',
         blank=True, null=True)
     birthday = models.DateField(
-        verbose_name='Дата Рождения')
+        verbose_name='Дата Рождения',
+        default=datetime.date.today().strftime('%Y-%m-%d'))
     photo = models.ImageField(
         upload_to='photos/%Y/%m/%d/',
         verbose_name='Фото',
         default=None, blank=True, null=True)
     created = models.DateTimeField(
         auto_now_add=True)
+    slug = models.SlugField(
+        default=slugify(name))
 
     def __str__(self):
         return f'{self.second_name} {self.name} {self.middle_name}'
@@ -72,13 +78,16 @@ class DoctorProfile(models.Model):
     """
     user = models.OneToOneField(
         User, on_delete=models.CASCADE,
-        related_name='doctor_profile')
+        related_name='doctor_profile',
+        blank=True, null=True)
     name = models.CharField(
         max_length=150,
-        verbose_name='Имя врача')
+        verbose_name='Имя врача',
+        blank=True, null=True)
     second_name = models.CharField(
         max_length=150,
-        verbose_name='Фамилия врача')
+        verbose_name='Фамилия врача',
+        blank=True, null=True)
     middle_name = models.CharField(
         max_length=150,
         verbose_name='Отчество врача',
@@ -205,7 +214,7 @@ class PatientRecord(models.Model):
     Время посещения врача фиксировано: FIXED_APPOINTMENT_DURATION
     """
 
-    FIXED_APPOINTMENT_DURATION = timedelta(minutes=20)
+    FIXED_APPOINTMENT_DURATION = datetime.timedelta(minutes=20)
 
     patient = models.ForeignKey(
         'UserProfile',

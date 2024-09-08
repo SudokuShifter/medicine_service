@@ -5,7 +5,7 @@
 
 <body class="text-center">
 <main class="form-signin w-100 m-auto mt-5 mb-5 py-5" style="max-width: 400px;">
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <img class="mb-4" src="{% static 'icons/logo.svg' %}" alt="" width="200" height="57">
         <h1 class="h3 mb-3 fw-normal">Заполнить данные</h1>
@@ -33,10 +33,10 @@
                 <label for="birthdate">Дата рождения</label>
             </div>
 
-<!--        <div class="mb-3">-->
-<!--            {{ form.photo|add_class:"form-control-file" }}-->
-<!--            <label for="{{ form.photo.id_for_label }}">Ваша фотография</label>-->
-<!--        </div>-->
+        <div class="mb-3">
+            {{ form.photo|add_class:"form-control-file" }}
+            <label for="{{ form.photo.id_for_label }}">Ваша фотография</label>
+        </div>
 
         <button class="w-100 btn btn-lg btn-primary" type="submit">Сохранить</button>
         <p class="mt-5 mb-3 text-muted">© 2024</p>

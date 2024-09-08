@@ -22,14 +22,23 @@
             <li><a href="{% url 'home' %}" class="nav-link px-2 link-secondary">Главная</a></li>
             <li><a href="#" class="nav-link px-2 link-dark">Расписание врачей</a></li>
             <li><a href="#" class="nav-link px-2 link-dark">Записи</a></li>
-            <li><a href="#" class="nav-link px-2 link-dark">Личный кабинет</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'lk' slug=user.user_profile.slug %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>
+            {% endif %}
             <li><a href="#" class="nav-link px-2 link-dark">FAQ</a></li>
         </ul>
-
+        {% if user.is_authenticated %}
+        <div class="col-md-3 text-end">
+            <a href="{% url 'logout' %}" class="btn btn-outline-primary me-2">Выйти</a>
+        </div>
+        {% else %}
         <div class="col-md-3 text-end">
             <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Войти</a>
             <a href="{% url 'register' %}" class="btn btn-primary">Регистрация</a>
         </div>
+        {% endif %}
     </header>
 </div>
 {% block content %}
