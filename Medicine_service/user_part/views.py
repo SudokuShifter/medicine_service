@@ -53,12 +53,12 @@ class UserProfileCreateView(CreateView):
     template_name = 'user_part/edit_data.html'
     form_class = CustomUpdateUserForm
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        if self.request.user.is_authenticated:
-            # Если у пользователя нет профиля, мы не передаем instance
-            kwargs['instance'] = getattr(self.request.user, 'user_profile', None)
-        return kwargs
+    # def get_form_kwargs(self):
+    #     kwargs = super().get_form_kwargs()
+    #     if self.request.user.is_authenticated:
+    #         # Если у пользователя нет профиля, мы не передаем instance
+    #         kwargs['instance'] = getattr(self.request.user, 'user_profile', None)
+    #     return kwargs
 
     def form_valid(self, form):
         # Сначала сохраняем профиль пользователя
