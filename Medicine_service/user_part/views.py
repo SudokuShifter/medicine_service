@@ -1,3 +1,5 @@
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
@@ -20,8 +22,11 @@ class UserLoginView(LoginView):
     template_name = 'user_part/login_form.html'
 
     def get_success_url(self):
-        user = self.request.user
-        success_url = reverse_lazy('first_create')
+        user_data = self.request.user.user_profile
+        if user_data:
+            success_url = reverse_lazy('lk', kwargs={'slug': user_data.slug})
+        else:
+            success_url = reverse_lazy('first_create')
         return success_url
 
 
@@ -30,6 +35,16 @@ class UserCreateView(CreateView):
     template_name = 'user_part/register_form.html'
     form_class = CustomCreateUserForm
     success_url = reverse_lazy('first_create')
+
+    def form_valid(self, form):
+        user = form.save()
+        UserProfile.objects.create(user=user, slug=user.username)
+        raw_password = form.cleaned_data.get('password1')
+        user = authenticate(username=user.username, password=raw_password)
+        if user is not None:
+            login(self.request, user)
+
+        return super().form_valid(form)
 
 
 class UserLk(DetailView):
@@ -57,6 +72,7 @@ class UserProfileCreateView(CreateView):
         user_profile.slug = user.username
         user_profile.save()
         # После успешного создания профиля, переходим по URL
+
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -65,5 +81,4 @@ class UserProfileCreateView(CreateView):
         return super().form_invalid(form)
 
     def get_success_url(self):
-        return reverse_lazy('lk', kwargs={'slug': self.object.user.username})
-
+        return reverse_lazy('lk', kwargs={'slug': self.object.slug})

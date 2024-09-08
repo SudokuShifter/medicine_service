@@ -1,11 +1,33 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<p>UserProfile.photo</p>
-<p>UserProfile.name</p>
-<p>UserProfile.second_name</p>
-<p>UserProfile.middle_name</p>
-<p>UserProfile.address</p>
-<p><a class="btn btn-primary" href="#"> Изменить данные»</a></p>
-<p><a class="btn btn-primary" href="#"> Изменить адрес»</a></p>
+<div class="container mt-5">
+    <!-- Заголовок профиля -->
+    <h2 class="mb-4 text-center">Профиль пользователя</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <!-- Карточка профиля -->
+            <div class="card shadow-sm">
+                <div class="card-header text-center mb-3">
+                    <!-- Фото пользователя -->
+                    <img src="{{ user.userprofile.photo.url }}" class="rounded-circle img-fluid" alt="Фото пользователя" style="width: 150px; height: 150px;">
+                </div>
+                <div class="card-body text-center mb-3">
+                    <!-- Имя пользователя -->
+                    <h5 class="card-title">{{ user.user_profile.name }} {{ user.user_profile.second_name }}</h5>
+                    <p class="card-text">{{ user.user_profile.middle_name }}</p>
+                    <p class="card-text">
+                        <strong>Адрес:</strong> {{ user.userprofile.address }}
+                    </p>
+                </div>
+                <div class="card-footer text-center mb-3">
+                    <!-- Кнопки для изменения данных и адреса -->
+                    <a href="#" class="btn btn-primary me-2">Изменить данные</a>
+                    <a href="#" class="btn btn-outline-primary">Изменить адрес</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
