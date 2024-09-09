@@ -1,11 +1,11 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView
 
 from .forms import CustomCreateUserForm, CustomUpdateUserForm
-from .models import UserProfile
+from .models import UserProfile, PatientStory
 from .logic import calculate_age
 # Create your views here.
 
@@ -42,9 +42,15 @@ class UserLk(DetailView):
     model = UserProfile
     template_name = 'user_part/lk.html'
 
+    def get_object(self, queryset=None):
+        return get_object_or_404(UserProfile, user=self.request.user)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['age'] = calculate_age(self.request.user.user_profile.birthday)
+        user_data = self.get_object()
+        context['user_data'] = user_data
+        context['records'] = user_data.records
+        context['age'] = calculate_age(user_data.birthday)
         return context
 
 
@@ -52,13 +58,6 @@ class UserProfileCreateView(CreateView):
     model = UserProfile
     template_name = 'user_part/edit_data.html'
     form_class = CustomUpdateUserForm
-
-    # def get_form_kwargs(self):
-    #     kwargs = super().get_form_kwargs()
-    #     if self.request.user.is_authenticated:
-    #         # Если у пользователя нет профиля, мы не передаем instance
-    #         kwargs['instance'] = getattr(self.request.user, 'user_profile', None)
-    #     return kwargs
 
     def form_valid(self, form):
         # Сначала сохраняем профиль пользователя
