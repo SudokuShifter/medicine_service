@@ -15,6 +15,12 @@ def home(request):
 
 
 class UserLoginView(LoginView):
+    """
+    Класс UserLoginView наследуется от LoginView.
+    В кач-ве атрибутов класса обозначена ссылка на темплейт и переопределён метод get_succes_url.
+    Проверяем юзера на то имеет ли юзер данные профиля, и если не имеет, то редиректим его на заполнение.
+    Если имеет данные, то в лк через slug
+    """
     template_name = 'user_part/login_form.html'
 
     def get_success_url(self):
@@ -28,17 +34,21 @@ class UserLoginView(LoginView):
 
 
 class UserCreateView(CreateView):
+    """
+    Класс UserCreateView наследуется от CreateView.
+    Отвечает за регистрацию пользователя
+    """
     model = User
     template_name = 'user_part/register_form.html'
     form_class = CustomCreateUserForm
     success_url = reverse_lazy('login')
 
-    def form_valid(self, form):
-        user = form.save()
-        return super().form_valid(form)
-
 
 class UserLk(DetailView):
+    """
+    Класс UserLk наследуется от DetailView.
+    Через метод get_object мы получаем объект модели UserProfile и используем данные в get_context_data.
+    """
     model = UserProfile
     template_name = 'user_part/lk.html'
 
@@ -55,6 +65,11 @@ class UserLk(DetailView):
 
 
 class UserProfileCreateView(CreateView):
+    """
+    Класс UserProfileCreateView наследуется от CreateView.
+    Класс отвечает за создание/редактирование данных юзера (UserProfile).
+    В методе form_valid автоматически заполняется slug и производится связка с моделью User
+    """
     model = UserProfile
     template_name = 'user_part/edit_data.html'
     form_class = CustomUpdateUserForm
