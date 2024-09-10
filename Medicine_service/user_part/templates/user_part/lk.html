@@ -23,7 +23,7 @@
                 <h2>{{ user_data.name }} {{ user_data.second_name }} {{ user_data.middle_name }}</h2>
                 <p class="fst-italic py-3">
                     {% if records.last %}
-                    Последняя запись к врачу была {{ records.last }}
+                    Последняя запись к врачу была {{ records.last.appointment_time }}
                     {% else %}
                     Записей к врачу пока не было
                     {% endif %}
