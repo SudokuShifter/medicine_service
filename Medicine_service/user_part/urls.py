@@ -11,5 +11,5 @@ urlpatterns = [
     path('register/2step', views.UserProfileCreateView.as_view(), name='register_profile'),
     path('register/3step', views.UserAddressCreateView.as_view(), name='register_address'),
     path('profile/<slug:slug>', views.UserLk.as_view(), name='lk'),
-    path('profile/edit_data/', views.UserProfileCreateView.as_view(), name='first_create')
+    path('profile/edit_data/', views.UserProfileCreateView.as_view(), name='edit_data')
 ]

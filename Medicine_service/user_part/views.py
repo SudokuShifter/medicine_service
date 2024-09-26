@@ -82,21 +82,25 @@ class UserAddressCreateView(UpdateView):
     model = Address
     template_name = 'user_part/edit_address.html'
     form_class = CustomUpdateUserAddressForm
-    success_url = reverse_lazy('login')
 
     def form_valid(self, form):
         # Сначала сохраняем профиль пользователя
         user_address = form.save(commit=False)
         user_profile = self.request.user.user_profile
-        user_address.profile = user_profile
+        user_profile.address = user_address
         user_address.save()
+        user_profile.save()
         # После успешного создания адреса, переходим по URL
         return super().form_valid(form)
 
     def get_object(self, queryset=None):
-        user = self.request.user
-        obj, created = Address.objects.get_or_create(profile=user.user_profile.address)
-        return obj
+        user_profile = self.request.user.user_profile
+        if user_profile.address:
+            return user_profile.address
+        return Address()
+
+    def get_success_url(self):
+        return reverse_lazy('lk', kwargs={'slug': self.request.user.user_profile.slug})
 
 
 class UserLk(DetailView):
@@ -118,26 +122,3 @@ class UserLk(DetailView):
         context['age'] = calculate_age(user_data.birthday)
         return context
 
-
-class UserProfileUpdateView(UpdateView):
-    """
-    Класс UserProfileUpdateView наследуется от UpdateView.
-    Класс отвечает за редактирование данных юзера (UserProfile).
-    В методе form_valid автоматически заполняется slug и производится связка с моделью User
-    """
-    model = UserProfile
-    template_name = 'user_part/edit_data.html'
-    form_class = CustomUpdateUserForm
-
-    def form_valid(self, form):
-        # Сначала сохраняем профиль пользователя
-        user_profile = form.save(commit=False)
-        user = self.request.user
-        user_profile.user = user
-        user_profile.slug = user.username
-        user_profile.save()
-        # После успешного создания профиля, переходим по URL
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy('lk', kwargs={'slug': self.object.slug})

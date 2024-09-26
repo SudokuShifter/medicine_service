@@ -45,10 +45,10 @@
                         <ul>
                             <li><i class="bi bi-chevron-right"></i> <strong>Возраст:</strong> <span>{{ age }}</span>
                             </li>
-                            <li><i class="bi bi-chevron-right"></i> <strong>Кто вы:</strong> <span>Пациент</span></li>
+                            <li><i class="bi bi-chevron-right"></i> <strong>Вы:</strong> <span>Пациент</span></li>
                             <li><i class="bi bi-chevron-right"></i> <strong>Адрес:</strong> <span>{{ user_data.address }}</span>
                             </li>
-                            <li><i class="bi bi-chevron-right"></i> <strong>Последняя запись:</strong> <span>{{ story.last.description }}</span>
+                            <li><i class="bi bi-chevron-right"></i> <strong>Последняя запись:</strong> <span> {{ story.last.description }}</span>
                             </li>
                         </ul>
                     </div>
@@ -58,11 +58,8 @@
                     Будьте здоровы!
                 </p>
             </div>
-            <div class="col-md-3 text-end mb-3">
-                <a href="{% url 'first_create' %}" class="btn btn-outline-primary me-2">Изменить данные</a>
-            </div>
-            <div class="col-md-3 text-end mb-3">
-                <a href="{% url 'first_create' %}" class="btn btn-outline-primary me-2">Изменить адрес</a>
+            <div class="col-lg-4">
+                <a href="{% url 'edit_data' %}" class="btn btn-outline-primary me-2">Изменить данные</a>
             </div>
         </div>
 
