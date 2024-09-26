@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import UserProfile
+from .models import UserProfile, Address
 
 
 class CustomCreateUserForm(UserCreationForm):
@@ -47,4 +47,20 @@ class CustomUpdateUserForm(forms.ModelForm):
         }
         widgets = {
             'birthday': forms.DateInput(attrs={'type': 'date'})
+        }
+
+
+class CustomUpdateUserAddressForm(forms.ModelForm):
+    class Meta:
+        model = Address
+        fields = [
+            'country', 'city',
+            'street', 'house_number',
+            'flat_number']
+        labels = {
+            'country': 'Страна',
+            'city': 'Город',
+            'street': 'Улица',
+            'house_number': 'Номер дома (корпус при наличии)',
+            'flat_number': 'Номер квартиры'
         }

@@ -1,11 +1,12 @@
+from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, UpdateView
 
-from .forms import CustomCreateUserForm, CustomUpdateUserForm
-from .models import UserProfile, PatientStory
+from .forms import CustomCreateUserForm, CustomUpdateUserForm, CustomUpdateUserAddressForm
+from .models import UserProfile, PatientStory, Address
 from .logic import calculate_age
 # Create your views here.
 
@@ -41,7 +42,65 @@ class UserCreateView(CreateView):
     model = User
     template_name = 'user_part/register_form.html'
     form_class = CustomCreateUserForm
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('register_profile')
+
+    def form_valid(self, form):
+        # Сначала сохраняем пользователя
+        response = super().form_valid(form)
+        # После успешного создания пользователя выполняем вход
+        login(self.request, self.object)  # self.object - это новый зарегистрированный пользователь
+        return response
+
+
+class UserProfileCreateView(UpdateView):
+    """
+    Класс UserProfileCreateView наследуется от CreateView.
+    Отвечает за 2й этап регистрации пользователя (добавление личных данных)
+    """
+    model = UserProfile
+    template_name = 'user_part/edit_data.html'
+    form_class = CustomUpdateUserForm
+    success_url = reverse_lazy('register_address')
+
+    def dispatch(self, request, *args, **kwargs):
+        # Проверяем, завершил ли пользователь первый этап регистрации
+        if not self.request.user.is_authenticated:
+            return redirect('register')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_object(self, queryset=None):
+        # Получаем профиль пользователя или создаем его, если не существует
+        obj, created = UserProfile.objects.get_or_create(user=self.request.user)
+        return obj
+
+
+class UserAddressCreateView(UpdateView):
+    """
+    Класс UserAddressCreateView наследуется от CreateView.
+    Отвечает за 3й этап регистрации пользователя (добавление данных об адресе)
+    """
+    model = Address
+    template_name = 'user_part/edit_address.html'
+    form_class = CustomUpdateUserAddressForm
+
+    def form_valid(self, form):
+        # Сначала сохраняем профиль пользователя
+        user_address = form.save(commit=False)
+        user_profile = self.request.user.user_profile
+        user_profile.address = user_address
+        user_address.save()
+        user_profile.save()
+        # После успешного создания адреса, переходим по URL
+        return super().form_valid(form)
+
+    def get_object(self, queryset=None):
+        user_profile = self.request.user.user_profile
+        if user_profile.address:
+            return user_profile.address
+        return Address()
+
+    def get_success_url(self):
+        return reverse_lazy('lk', kwargs={'slug': self.request.user.user_profile.slug})
 
 
 class UserLk(DetailView):
@@ -63,26 +122,3 @@ class UserLk(DetailView):
         context['age'] = calculate_age(user_data.birthday)
         return context
 
-
-class UserProfileCreateView(CreateView):
-    """
-    Класс UserProfileCreateView наследуется от CreateView.
-    Класс отвечает за создание/редактирование данных юзера (UserProfile).
-    В методе form_valid автоматически заполняется slug и производится связка с моделью User
-    """
-    model = UserProfile
-    template_name = 'user_part/edit_data.html'
-    form_class = CustomUpdateUserForm
-
-    def form_valid(self, form):
-        # Сначала сохраняем профиль пользователя
-        user_profile = form.save(commit=False)
-        user = self.request.user
-        user_profile.user = user
-        user_profile.slug = user.username
-        user_profile.save()
-        # После успешного создания профиля, переходим по URL
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy('lk', kwargs={'slug': self.object.slug})

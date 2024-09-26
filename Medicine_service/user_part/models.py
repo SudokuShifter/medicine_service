@@ -45,6 +45,9 @@ class UserProfile(models.Model):
         auto_now_add=True)
     slug = models.SlugField(
         default=slugify(name))
+    address = models.OneToOneField(
+        'Address', on_delete=models.SET_NULL,
+        related_name='profile', null=True, blank=True)
 
     def __str__(self):
         return f'{self.second_name} {self.name} {self.middle_name}'
@@ -139,9 +142,6 @@ class Address(models.Model):
     flat_number = models.IntegerField(
         verbose_name='Номер квартиры',
         blank=True, null=True)
-    profile = models.OneToOneField(
-        'UserProfile', on_delete=models.CASCADE,
-        related_name='address')
 
     class Meta:
         verbose_name = 'Адрес пациента'
