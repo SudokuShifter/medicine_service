@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+
+<body class="text-center">
+<main class="form-signin w-100 m-auto mt-5 mb-5 py-5" style="max-width: 400px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <img class="mb-4" src="{% static 'icons/logo.svg' %}" alt="" width="200" height="57">
+        <h1 class="h3 mb-3 fw-normal">Заполнить данные</h1>
+
+        <!-- Обработка ошибок формы -->
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            Проверьте правильность введённых данных
+        </div>
+        {% endif %}
+        <div class="form-floating mb-3">
+            {{ form.country|add_class:"form-control" }}
+            <label for="id_country">Страна</label>
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.city|add_class:"form-control" }}
+            <label for="id_city">Город</label>
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.street|add_class:"form-control" }}
+            <label for="id_street">Улица</label>
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.house_number|add_class:"form-control" }}
+            <label for="id_house_number">Номер дома</label>
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.flat_number|add_class:"form-control" }}
+            <label for="id_flat_number">Номер квартиры</label>
+        </div>
+
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Сохранить</button>
+        <p class="mt-5 mb-3 text-muted">© 2024</p>
+    </form>
+</main>
+</body>
+{% endblock %}
