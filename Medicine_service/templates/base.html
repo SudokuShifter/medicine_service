@@ -23,7 +23,9 @@
                 <li><a href="#" class="nav-link px-2 link-dark">Расписание врачей</a></li>
                 <li><a href="#" class="nav-link px-2 link-dark">Записи</a></li>
                 {% if user.is_authenticated %}
-                    {% if user.user_profile.slug %}
+                    {% if user.is_staff %}
+                        <li><a href="{% url 'lk' slug=user.doctor_profile.slug %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>
+                    {% elif not user.is_staff %}
                         <li><a href="{% url 'lk' slug=user.user_profile.slug %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>
                     {% else %}
                         <li><a href="{% url 'edit_data' %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>

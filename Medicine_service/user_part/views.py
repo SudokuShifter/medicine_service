@@ -131,6 +131,8 @@ class UserLk(DetailView):
         user_data = self.get_object()
         context['user_data'] = user_data
         context['records'] = user_data.records
+        context['records_count'] = user_data.records.count()
         context['age'] = calculate_age(user_data.birthday)
+        context['address'] = user_data.address
         return context
 

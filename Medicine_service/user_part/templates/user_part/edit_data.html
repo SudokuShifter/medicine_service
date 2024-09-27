@@ -28,11 +28,17 @@
             {{ form.middle_name|add_class:"form-control" }}
             <label for="id_middle_name">Отчество</label>
         </div>
-         <div class="form-floating mb-3">
-             {{ form.birthday|add_class:"form-control" }}
-                <label for="birthdate">Дата рождения</label>
-            </div>
-
+        <div class="form-floating mb-3">
+            {{ form.birthday|add_class:"form-control" }}
+            <label for="birthdate">Дата рождения</label>
+        </div>
+        {% if user.is_staff %}
+        <div class="form-floating mb-3">
+            <!-- Выводим ChoiceField с красивым стилем -->
+            {{ form.position|add_class:"form-select" }}
+            <label for="{{ form.position.id_for_label }}">Должность</label>
+        </div>
+        {% endif %}
         <div class="mb-3">
             {{ form.photo|add_class:"form-control-file" }}
             <label for="{{ form.photo.id_for_label }}">Ваша фотография</label>

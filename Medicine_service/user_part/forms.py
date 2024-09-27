@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import UserProfile, Address, DoctorProfile
+from .models import UserProfile, Address, DoctorProfile, Position
 from source.settings import INVITE_CODE
 
 
@@ -80,23 +80,33 @@ class CustomUpdateUserForm(forms.ModelForm):
 
 
 class CustomUpdateDoctorForm(forms.ModelForm):
+    position = forms.ModelChoiceField(
+        queryset=Position.objects.all(),
+        required=True, label='Должность')
+
     class Meta:
         model = DoctorProfile
         fields = [
             'name', 'second_name',
             'middle_name', 'birthday',
-            'photo', 'position'
+            'photo'
         ]
         labels = {
             'name': 'Имя',
             'second_name': 'Фамилия',
             'middle_name': 'Отчество',
             'photo': 'Фотография',
-            'position': 'Должность'
         }
         widgets = {
-            'birthday': forms.DateInput(attrs={'type': 'date'})
+            'birthday': forms.DateInput(attrs={'type': 'date'}),
         }
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        position = self.cleaned_data.get('position')
+        user.position = position
+        user.save()
+        return user
 
 
 class CustomUpdateUserAddressForm(forms.ModelForm):

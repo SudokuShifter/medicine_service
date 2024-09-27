@@ -41,7 +41,7 @@
                                 <span>{{ user.email }}</span></li>
                             <li><i class="bi bi-chevron-right"></i> <strong>Login:</strong>
                                 <span>{{ user.username }}</span></li>
-                            <li><i class="bi bi-chevron-right"></i> <strong>Город:</strong> <span>{{ user_data.address.city }}</span>
+                            <li><i class="bi bi-chevron-right"></i> <strong>Кол-во посещений:</strong> <span>{{ records_count }}</span>
                             </li>
                         </ul>
                     </div>
@@ -51,8 +51,8 @@
                             </li>
                             <li><i class="bi bi-chevron-right"></i> <strong>Вы:</strong> <span>
                                 {% if user.is_staff %}
-                                    {% if position %}
-                                        Врач по специальности: {{ position }}
+                                    {% if user_data.position %}
+                                        Врач по специальности: {{ user_data.position }}
                                     {% else %}
                                         Врач без определённый специальности
                                     {% endif %}
@@ -60,7 +60,13 @@
                                     Пациент
                                 {% endif %}
                             </span></li>
-                            <li><i class="bi bi-chevron-right"></i> <strong>Адрес:</strong> <span>{{ user_data.address }}</span>
+                            <li><i class="bi bi-chevron-right"></i> <strong>Адрес:</strong> <span>
+                                {% if address.country is None %}
+                                <a href="{% url 'register_address' %}">Заполнить адрес</a>
+                                {% else %}
+                                {{ user_data.address }}
+                                {% endif %}
+                            </span>
                             </li>
                             <li><i class="bi bi-chevron-right"></i> <strong>Последняя запись:</strong>
                                 <span> {% if records.last %}
