@@ -57,7 +57,6 @@ class UserProfileCreateView(UpdateView):
     Класс UserProfileCreateView наследуется от CreateView.
     Отвечает за 2й этап регистрации пользователя (добавление личных данных)
     """
-    model = UserProfile
     template_name = 'user_part/edit_data.html'
     form_class = CustomUpdateUserForm
     success_url = reverse_lazy('register_address')
@@ -70,7 +69,9 @@ class UserProfileCreateView(UpdateView):
 
     def get_object(self, queryset=None):
         # Получаем профиль пользователя или создаем его, если не существует
-        obj, created = UserProfile.objects.get_or_create(user=self.request.user)
+        user = self.request.user
+        model = DoctorProfile if user.is_staff else UserProfile
+        obj, created = model.objects.get_or_create(user=user)
         return obj
 
 
@@ -85,8 +86,9 @@ class UserAddressCreateView(UpdateView):
 
     def form_valid(self, form):
         # Сначала сохраняем профиль пользователя
+        user = self.request.user
         user_address = form.save(commit=False)
-        user_profile = self.request.user.user_profile
+        user_profile = user.doctor_profile if user.is_staff else user.user_profile
         user_profile.address = user_address
         user_address.save()
         user_profile.save()
@@ -94,7 +96,8 @@ class UserAddressCreateView(UpdateView):
         return super().form_valid(form)
 
     def get_object(self, queryset=None):
-        user_profile = self.request.user.user_profile
+        user = self.request.user
+        user_profile = user.doctor_profile if user.is_staff else user.user_profile
         if user_profile.address:
             return user_profile.address
         return Address()

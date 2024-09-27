@@ -56,6 +56,7 @@ class CustomCreateUserForm(UserCreationForm):
         # Если код верный, устанавливаем is_staff = True
         if code and code == INVITE_CODE:
             user.is_staff = True
+
         user.save()
         return user
 

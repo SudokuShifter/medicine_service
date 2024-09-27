@@ -106,6 +106,8 @@ class DoctorProfile(models.Model):
         on_delete=models.PROTECT,
         verbose_name='Должность врача',
         related_name='doctors')
+    slug = models.SlugField(
+        default=slugify(name))
 
     def __str__(self):
         return f'{self.name} {self.second_name} {self.middle_name} в должности {self.position}'
