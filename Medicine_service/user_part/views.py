@@ -121,3 +121,24 @@ class UserLk(DetailView):
         context['records'] = user_data.records
         context['age'] = calculate_age(user_data.birthday)
         return context
+
+
+class DoctorLK(DetailView):
+    """
+    Класс UserLk наследуется от DetailView.
+    Через метод get_object мы получаем объект модели UserProfile и используем данные в get_context_data.
+    """
+    model = DoctorProfile
+    template_name = 'user_part/lk.html'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(DoctorProfile, user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        doctor_data = self.get_object()
+        context['doctor_data'] = doctor_data
+        context['records'] = doctor_data.records
+        context['age'] = calculate_age(doctor_data.birthday)
+        context['position'] = doctor_data.position
+        return context

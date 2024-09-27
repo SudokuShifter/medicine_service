@@ -5,7 +5,11 @@
 
     <!-- Section Title -->
     <div class="container section-title aos-init aos-animate" data-aos="fade-up">
-        <h2>Личная страница</h2>
+        {% if user.is_staff %}
+        <h2>Личная страница врача</h2>
+        {% else %}
+        <h2>Личная страница пациента</h2>
+        {% endif %}
         <p>Акаунт был создан {{user.user_profile.created}}</p>
     </div><!-- End Section Title -->
 
@@ -14,19 +18,19 @@
         <div class="row gy-4 justify-content-center">
             <div class="col-lg-4">
                 {% if user_data.photo %}
-                <img src="{{ user_data.photo.url }}" class="img-fluid" alt="" width="300" height="300">
+                <img src="{{ user_data.photo.url }}" class="img-fluid" alt="" width="360" height="360">
                 {% else %}
-                <img src="{% static 'default.jpg' %}" class="img-fluid" alt="" width="300" height="300">
+                <img src="{% static 'default.jpg' %}" class="img-fluid" alt="" width="360" height="360">
                 {% endif %}
             </div>
             <div class="col-lg-8 content">
                 <h2>{{ user_data.name }} {{ user_data.second_name }} {{ user_data.middle_name }}</h2>
                 <p class="fst-italic py-3">
-                    {% if records.last %}
-                    Последняя запись к врачу была {{ records.last.appointment_time }}
-                    {% else %}
-                    Записей к врачу пока не было
-                    {% endif %}
+                        {% if records.last %}
+                            Последняя запись была: {{ records.last.appointment_time }}
+                        {% else %}
+                            Записей пока не было
+                        {% endif %}
                 </p>
                 <div class="row">
                     <div class="col-lg-6">
@@ -47,7 +51,11 @@
                             </li>
                             <li><i class="bi bi-chevron-right"></i> <strong>Вы:</strong> <span>
                                 {% if user.is_staff %}
-                                    Врач
+                                    {% if position %}
+                                        Врач по специальности: {{ position }}
+                                    {% else %}
+                                        Врач без определённый специальности
+                                    {% endif %}
                                 {% else %}
                                     Пациент
                                 {% endif %}

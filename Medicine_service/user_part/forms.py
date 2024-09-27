@@ -4,7 +4,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import UserProfile, Address
+from .models import UserProfile, Address, DoctorProfile
+from source.settings import INVITE_CODE
 
 
 class CustomCreateUserForm(UserCreationForm):
@@ -53,7 +54,7 @@ class CustomCreateUserForm(UserCreationForm):
         user = super().save(commit=False)
         code = self.cleaned_data.get('code')
         # Если код верный, устанавливаем is_staff = True
-        if code and code == os.getenv('INVITE_CODE'):
+        if code and code == INVITE_CODE:
             user.is_staff = True
         user.save()
         return user
