@@ -27,7 +27,7 @@ class UserLoginView(LoginView):
     def get_success_url(self):
         user = self.request.user
         if user.is_authenticated:
-            user_profile = getattr(user, 'user_profile', None)
+            user_profile = getattr(user, 'doctor_profile' if user.is_staff else 'user_profile', None)
             if user_profile and user_profile.name:
                 return reverse_lazy('lk', kwargs={'slug': user_profile.slug})
             return reverse_lazy('first_create')
@@ -74,6 +74,7 @@ class UserProfileCreateView(UpdateView):
         user = self.request.user
         model = DoctorProfile if user.is_staff else UserProfile
         obj, created = model.objects.get_or_create(user=user)
+        obj.slug = user.username
         return obj
 
     def get_form_class(self):
@@ -119,11 +120,11 @@ class UserLk(DetailView):
     Класс UserLk наследуется от DetailView.
     Через метод get_object мы получаем объект модели UserProfile и используем данные в get_context_data.
     """
-    model = UserProfile
     template_name = 'user_part/lk.html'
 
     def get_object(self, queryset=None):
-        return get_object_or_404(UserProfile, user=self.request.user)
+        user = self.request.user
+        return get_object_or_404(DoctorProfile if user.is_staff else UserProfile, user=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -133,23 +134,3 @@ class UserLk(DetailView):
         context['age'] = calculate_age(user_data.birthday)
         return context
 
-
-class DoctorLK(DetailView):
-    """
-    Класс UserLk наследуется от DetailView.
-    Через метод get_object мы получаем объект модели UserProfile и используем данные в get_context_data.
-    """
-    model = DoctorProfile
-    template_name = 'user_part/lk.html'
-
-    def get_object(self, queryset=None):
-        return get_object_or_404(DoctorProfile, user=self.request.user)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        doctor_data = self.get_object()
-        context['doctor_data'] = doctor_data
-        context['records'] = doctor_data.records
-        context['age'] = calculate_age(doctor_data.birthday)
-        context['position'] = doctor_data.position
-        return context

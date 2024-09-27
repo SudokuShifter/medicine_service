@@ -94,6 +94,9 @@ class CustomUpdateDoctorForm(forms.ModelForm):
             'photo': 'Фотография',
             'position': 'Должность'
         }
+        widgets = {
+            'birthday': forms.DateInput(attrs={'type': 'date'})
+        }
 
 
 class CustomUpdateUserAddressForm(forms.ModelForm):
