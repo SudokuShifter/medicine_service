@@ -47,7 +47,7 @@ class UserProfile(models.Model):
         default=slugify(name))
     address = models.OneToOneField(
         'Address', on_delete=models.SET_NULL,
-        related_name='profile', null=True, blank=True)
+        related_name='user_profile', null=True, blank=True)
 
     def __str__(self):
         return f'{self.second_name} {self.name} {self.middle_name}'
@@ -108,7 +108,11 @@ class DoctorProfile(models.Model):
         'Position',
         on_delete=models.PROTECT,
         verbose_name='Должность врача',
-        related_name='doctors')
+        related_name='doctors',
+        null=True, blank=True)
+    address = models.OneToOneField(
+        'Address', on_delete=models.SET_NULL,
+        related_name='doctor_profile', null=True, blank=True)
     slug = models.SlugField(
         default=slugify(name))
 
