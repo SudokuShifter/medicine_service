@@ -95,6 +95,9 @@ class DoctorProfile(models.Model):
         max_length=150,
         verbose_name='Отчество врача',
         blank=True, null=True)
+    birthday = models.DateField(
+        verbose_name='Дата Рождения',
+        default=datetime.date.today().strftime('%Y-%m-%d'))
     photo = models.ImageField(
         upload_to='photos/%Y/%m/%d/',
         verbose_name='Фото',

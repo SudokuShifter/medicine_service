@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
 
-from .forms import CustomCreateUserForm, CustomUpdateUserForm, CustomUpdateUserAddressForm
+from .forms import CustomCreateUserForm, CustomUpdateUserForm, CustomUpdateUserAddressForm, CustomUpdateDoctorForm
 from .models import UserProfile, PatientStory, Address, DoctorProfile
 from .logic import calculate_age
 # Create your views here.
@@ -58,8 +58,10 @@ class UserProfileCreateView(UpdateView):
     Отвечает за 2й этап регистрации пользователя (добавление личных данных)
     """
     template_name = 'user_part/edit_data.html'
-    form_class = CustomUpdateUserForm
     success_url = reverse_lazy('register_address')
+
+    def check_is_staff(self):
+        return self.request.user.is_staff
 
     def dispatch(self, request, *args, **kwargs):
         # Проверяем, завершил ли пользователь первый этап регистрации
@@ -74,6 +76,9 @@ class UserProfileCreateView(UpdateView):
         obj, created = model.objects.get_or_create(user=user)
         return obj
 
+    def get_form_class(self):
+        return CustomUpdateDoctorForm if self.check_is_staff() else CustomUpdateUserForm
+
 
 class UserAddressCreateView(UpdateView):
     """
@@ -84,11 +89,14 @@ class UserAddressCreateView(UpdateView):
     template_name = 'user_part/edit_address.html'
     form_class = CustomUpdateUserAddressForm
 
+    def check_model(self):
+        user = self.request.user
+        return user.doctor_profile if user.is_staff else user.user_profile
+
     def form_valid(self, form):
         # Сначала сохраняем профиль пользователя
-        user = self.request.user
         user_address = form.save(commit=False)
-        user_profile = user.doctor_profile if user.is_staff else user.user_profile
+        user_profile = self.check_model()
         user_profile.address = user_address
         user_address.save()
         user_profile.save()
@@ -96,14 +104,14 @@ class UserAddressCreateView(UpdateView):
         return super().form_valid(form)
 
     def get_object(self, queryset=None):
-        user = self.request.user
-        user_profile = user.doctor_profile if user.is_staff else user.user_profile
+        user_profile = self.check_model()
         if user_profile.address:
             return user_profile.address
         return Address()
 
     def get_success_url(self):
-        return reverse_lazy('lk', kwargs={'slug': self.request.user.user_profile.slug})
+        user_profile = self.check_model()
+        return reverse_lazy('lk', kwargs={'slug': user_profile.slug})
 
 
 class UserLk(DetailView):

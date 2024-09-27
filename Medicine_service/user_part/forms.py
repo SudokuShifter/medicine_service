@@ -79,6 +79,23 @@ class CustomUpdateUserForm(forms.ModelForm):
         }
 
 
+class CustomUpdateDoctorForm(forms.ModelForm):
+    class Meta:
+        model = DoctorProfile
+        fields = [
+            'name', 'second_name',
+            'middle_name', 'birthday',
+            'photo', 'position'
+        ]
+        labels = {
+            'name': 'Имя',
+            'second_name': 'Фамилия',
+            'middle_name': 'Отчество',
+            'photo': 'Фотография',
+            'position': 'Должность'
+        }
+
+
 class CustomUpdateUserAddressForm(forms.ModelForm):
     class Meta:
         model = Address
