@@ -32,6 +32,10 @@
             {{ form.password2|add_class:"form-control" }}
             <label for="id_password2">Подтверждение пароля</label>
         </div>
+        <div class="form-floating mb-3">
+            {{ form.code|add_class:"form-control" }}
+            <label for="id_code">Инвайт-код</label>
+        </div>
 
         <button class="w-100 btn btn-lg btn-primary" type="submit">Зарегистрироваться</button>
         <p class="mt-5 mb-3 text-muted">© 2024</p>

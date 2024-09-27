@@ -14,9 +14,9 @@
         <div class="row gy-4 justify-content-center">
             <div class="col-lg-4">
                 {% if user_data.photo %}
-                    <img src="{{ user_data.photo.url }}" class="img-fluid" alt="" width="300" height="300">
+                <img src="{{ user_data.photo.url }}" class="img-fluid" alt="" width="300" height="300">
                 {% else %}
-                    <img src="{% static 'default.jpg' %}" class="img-fluid" alt="" width="300" height="300">
+                <img src="{% static 'default.jpg' %}" class="img-fluid" alt="" width="300" height="300">
                 {% endif %}
             </div>
             <div class="col-lg-8 content">
@@ -45,10 +45,22 @@
                         <ul>
                             <li><i class="bi bi-chevron-right"></i> <strong>Возраст:</strong> <span>{{ age }}</span>
                             </li>
-                            <li><i class="bi bi-chevron-right"></i> <strong>Вы:</strong> <span>Пациент</span></li>
+                            <li><i class="bi bi-chevron-right"></i> <strong>Вы:</strong> <span>
+                                {% if user.is_staff %}
+                                    Врач
+                                {% else %}
+                                    Пациент
+                                {% endif %}
+                            </span></li>
                             <li><i class="bi bi-chevron-right"></i> <strong>Адрес:</strong> <span>{{ user_data.address }}</span>
                             </li>
-                            <li><i class="bi bi-chevron-right"></i> <strong>Последняя запись:</strong> <span> {{ story.last.description }}</span>
+                            <li><i class="bi bi-chevron-right"></i> <strong>Последняя запись:</strong>
+                                <span> {% if records.last %}
+                                        {{ records.last.appointment_time }}
+                                        {% else %}
+                                        Записей пока не было
+                                        {% endif %}
+                                </span>
                             </li>
                         </ul>
                     </div>

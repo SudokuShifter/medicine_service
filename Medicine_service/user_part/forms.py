@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
 from django.contrib.auth.models import User
@@ -6,10 +8,14 @@ from .models import UserProfile, Address
 
 
 class CustomCreateUserForm(UserCreationForm):
+    code = forms.CharField(
+        max_length=10, min_length=3, required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Инвайт-код (если вы врач)'}))
+
     class Meta:
         model = User
         fields = [
-            'username', 'email', 'password1', 'password2'
+            'username', 'email', 'password1', 'password2', 'code'
         ]
         widgets = {
             'username': forms.TextInput(attrs={'placeholder': 'Иван Иванов'}),
@@ -21,15 +27,36 @@ class CustomCreateUserForm(UserCreationForm):
             'username': 'Имя',
             'email': 'Email',
             'password1': 'Пароль',
-            'password2': 'Подтверждение пароля'
-
+            'password2': 'Подтверждение пароля',
+            'code': 'Введите код'
         }
 
     def clean_username(self):
+        """
+        Проверка уникальности юзернейма
+        """
         username = self.cleaned_data.get('username')
         if User.objects.filter(username=username).exists():
-            raise forms.ValidationError("Имя пользователя уже существует")
+            raise forms.ValidationError('Имя пользователя уже существует')
         return username
+
+    def clean_email(self):
+        """
+        Проверка уникальности Мейла
+        """
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError('Данный e-mail уже используется другим пользователем')
+        return email
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        code = self.cleaned_data.get('code')
+        # Если код верный, устанавливаем is_staff = True
+        if code and code == os.getenv('INVITE_CODE'):
+            user.is_staff = True
+        user.save()
+        return user
 
 
 class CustomUpdateUserForm(forms.ModelForm):

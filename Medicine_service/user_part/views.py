@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
 
 from .forms import CustomCreateUserForm, CustomUpdateUserForm, CustomUpdateUserAddressForm
-from .models import UserProfile, PatientStory, Address
+from .models import UserProfile, PatientStory, Address, DoctorProfile
 from .logic import calculate_age
 # Create your views here.
 
@@ -121,4 +121,3 @@ class UserLk(DetailView):
         context['records'] = user_data.records
         context['age'] = calculate_age(user_data.birthday)
         return context
-
