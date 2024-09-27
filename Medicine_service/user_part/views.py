@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
 
-from .forms import CustomCreateUserForm, CustomUpdateUserForm, CustomUpdateUserAddressForm
+from .forms import CustomCreateUserForm, CustomUpdateUserForm, CustomUpdateUserAddressForm, CustomUpdateDoctorForm
 from .models import UserProfile, PatientStory, Address, DoctorProfile
 from .logic import calculate_age
 # Create your views here.
@@ -27,7 +27,7 @@ class UserLoginView(LoginView):
     def get_success_url(self):
         user = self.request.user
         if user.is_authenticated:
-            user_profile = getattr(user, 'user_profile', None)
+            user_profile = getattr(user, 'doctor_profile' if user.is_staff else 'user_profile', None)
             if user_profile and user_profile.name:
                 return reverse_lazy('lk', kwargs={'slug': user_profile.slug})
             return reverse_lazy('first_create')
@@ -57,10 +57,11 @@ class UserProfileCreateView(UpdateView):
     Класс UserProfileCreateView наследуется от CreateView.
     Отвечает за 2й этап регистрации пользователя (добавление личных данных)
     """
-    model = UserProfile
     template_name = 'user_part/edit_data.html'
-    form_class = CustomUpdateUserForm
     success_url = reverse_lazy('register_address')
+
+    def check_is_staff(self):
+        return self.request.user.is_staff
 
     def dispatch(self, request, *args, **kwargs):
         # Проверяем, завершил ли пользователь первый этап регистрации
@@ -70,8 +71,14 @@ class UserProfileCreateView(UpdateView):
 
     def get_object(self, queryset=None):
         # Получаем профиль пользователя или создаем его, если не существует
-        obj, created = UserProfile.objects.get_or_create(user=self.request.user)
+        user = self.request.user
+        model = DoctorProfile if user.is_staff else UserProfile
+        obj, created = model.objects.get_or_create(user=user)
+        obj.slug = user.username
         return obj
+
+    def get_form_class(self):
+        return CustomUpdateDoctorForm if self.check_is_staff() else CustomUpdateUserForm
 
 
 class UserAddressCreateView(UpdateView):
@@ -83,10 +90,14 @@ class UserAddressCreateView(UpdateView):
     template_name = 'user_part/edit_address.html'
     form_class = CustomUpdateUserAddressForm
 
+    def check_model(self):
+        user = self.request.user
+        return user.doctor_profile if user.is_staff else user.user_profile
+
     def form_valid(self, form):
         # Сначала сохраняем профиль пользователя
         user_address = form.save(commit=False)
-        user_profile = self.request.user.user_profile
+        user_profile = self.check_model()
         user_profile.address = user_address
         user_address.save()
         user_profile.save()
@@ -94,13 +105,14 @@ class UserAddressCreateView(UpdateView):
         return super().form_valid(form)
 
     def get_object(self, queryset=None):
-        user_profile = self.request.user.user_profile
+        user_profile = self.check_model()
         if user_profile.address:
             return user_profile.address
         return Address()
 
     def get_success_url(self):
-        return reverse_lazy('lk', kwargs={'slug': self.request.user.user_profile.slug})
+        user_profile = self.check_model()
+        return reverse_lazy('lk', kwargs={'slug': user_profile.slug})
 
 
 class UserLk(DetailView):
@@ -108,11 +120,11 @@ class UserLk(DetailView):
     Класс UserLk наследуется от DetailView.
     Через метод get_object мы получаем объект модели UserProfile и используем данные в get_context_data.
     """
-    model = UserProfile
     template_name = 'user_part/lk.html'
 
     def get_object(self, queryset=None):
-        return get_object_or_404(UserProfile, user=self.request.user)
+        user = self.request.user
+        return get_object_or_404(DoctorProfile if user.is_staff else UserProfile, user=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -121,3 +133,4 @@ class UserLk(DetailView):
         context['records'] = user_data.records
         context['age'] = calculate_age(user_data.birthday)
         return context
+

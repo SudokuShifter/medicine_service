@@ -47,7 +47,7 @@ class UserProfile(models.Model):
         default=slugify(name))
     address = models.OneToOneField(
         'Address', on_delete=models.SET_NULL,
-        related_name='profile', null=True, blank=True)
+        related_name='user_profile', null=True, blank=True)
 
     def __str__(self):
         return f'{self.second_name} {self.name} {self.middle_name}'
@@ -95,6 +95,9 @@ class DoctorProfile(models.Model):
         max_length=150,
         verbose_name='Отчество врача',
         blank=True, null=True)
+    birthday = models.DateField(
+        verbose_name='Дата Рождения',
+        default=datetime.date.today().strftime('%Y-%m-%d'))
     photo = models.ImageField(
         upload_to='photos/%Y/%m/%d/',
         verbose_name='Фото',
@@ -105,7 +108,13 @@ class DoctorProfile(models.Model):
         'Position',
         on_delete=models.PROTECT,
         verbose_name='Должность врача',
-        related_name='doctors')
+        related_name='doctors',
+        null=True, blank=True)
+    address = models.OneToOneField(
+        'Address', on_delete=models.SET_NULL,
+        related_name='doctor_profile', null=True, blank=True)
+    slug = models.SlugField(
+        default=slugify(name))
 
     def __str__(self):
         return f'{self.name} {self.second_name} {self.middle_name} в должности {self.position}'

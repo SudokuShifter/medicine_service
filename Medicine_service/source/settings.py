@@ -142,3 +142,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGOUT_REDIRECT_URL = '/'
 
+load_dotenv()
+INVITE_CODE = os.getenv('INVITE_CODE')
