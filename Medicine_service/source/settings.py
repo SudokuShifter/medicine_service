@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'widget_tweaks',
     'user_part.apps.UserPartConfig',
+    'records.apps.RecordsConfig'
 ]
 
 MIDDLEWARE = [

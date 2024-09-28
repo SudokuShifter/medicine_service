@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
 
 from .forms import CustomCreateUserForm, CustomUpdateUserForm, CustomUpdateUserAddressForm, CustomUpdateDoctorForm
-from .models import UserProfile, PatientStory, Address, DoctorProfile
+from .models import UserProfile, Address, DoctorProfile
 from .logic import calculate_age
 # Create your views here.
 
@@ -95,7 +95,7 @@ class UserAddressCreateView(UpdateView):
         return user.doctor_profile if user.is_staff else user.user_profile
 
     def form_valid(self, form):
-        # Сначала сохраняем профиль пользователя
+        # Сначала сохраняем профиль пользователя в переменную user_address
         user_address = form.save(commit=False)
         user_profile = self.check_model()
         user_profile.address = user_address
@@ -118,7 +118,8 @@ class UserAddressCreateView(UpdateView):
 class UserLk(DetailView):
     """
     Класс UserLk наследуется от DetailView.
-    Через метод get_object мы получаем объект модели UserProfile и используем данные в get_context_data.
+    Через метод get_object мы получаем объект модели UserProfile или DoctorProfile
+    и используем данные в get_context_data.
     """
     template_name = 'user_part/lk.html'
 
