@@ -20,8 +20,13 @@
         <div class="d-flex flex-grow-1 justify-content-center">
             <ul class="nav mb-2 justify-content-center">
                 <li><a href="{% url 'home' %}" class="nav-link px-2 link-secondary">Главная</a></li>
+                {% if user.is_staff %}
+                <li><a href="#" class="nav-link px-2 link-dark">Своё расписание</a></li>
+                <li><a href="#" class="nav-link px-2 link-dark">Записи пациентов</a></li>
+                {% else %}
                 <li><a href="#" class="nav-link px-2 link-dark">Расписание врачей</a></li>
                 <li><a href="#" class="nav-link px-2 link-dark">Записи</a></li>
+                {% endif %}
                 {% if user.is_authenticated %}
                     {% if user.is_staff %}
                         <li><a href="{% url 'lk' slug=user.doctor_profile.slug %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>
