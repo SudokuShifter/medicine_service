@@ -22,7 +22,8 @@ from . import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('user_part.urls'))
+    path('', include('user_part.urls')),
+    path('records', include('records.urls'))
 ]
 
 if settings.DEBUG:

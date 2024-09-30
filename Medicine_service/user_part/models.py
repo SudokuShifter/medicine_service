@@ -1,7 +1,8 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
-import datetime
 
 
 # Create your models here.
@@ -44,7 +45,8 @@ class UserProfile(models.Model):
     created = models.DateTimeField(
         auto_now_add=True)
     slug = models.SlugField(
-        default=slugify(name))
+        default=slugify(name),
+        unique=True)
     address = models.OneToOneField(
         'Address', on_delete=models.SET_NULL,
         related_name='user_profile', null=True, blank=True)
@@ -114,7 +116,8 @@ class DoctorProfile(models.Model):
         'Address', on_delete=models.SET_NULL,
         related_name='doctor_profile', null=True, blank=True)
     slug = models.SlugField(
-        default=slugify(name))
+        default=slugify(name),
+        unique=True)
 
     def __str__(self):
         return f'{self.name} {self.second_name} {self.middle_name} в должности {self.position}'
