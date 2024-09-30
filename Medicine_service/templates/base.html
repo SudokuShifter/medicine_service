@@ -22,11 +22,11 @@
             <ul class="nav mb-2 justify-content-center">
                 <li><a href="{% url 'home' %}" class="nav-link px-2 link-secondary">Главная</a></li>
                 {% if user.is_staff %}
-                <li><a href="{% url 'schedule' %}" class="nav-link px-2 link-dark">Рейтинг врачей</a></li>
-                <li><a href="{% url 'schedule' %}" class="nav-link px-2 link-dark">Доступные пациенты</a></li>
+                <li><a href="#" class="nav-link px-2 link-dark">Рейтинг врачей</a></li>
+                <li><a href="#" class="nav-link px-2 link-dark">Доступные пациенты</a></li>
                 <li><a href="#" class="nav-link px-2 link-dark">Записи пациентов</a></li>
                 {% else %}
-                <li><a href="#" class="nav-link px-2 link-dark">Доступные врачи</a></li>
+                <li><a href="{% url 'doc_list' %}" class="nav-link px-2 link-dark">Доступные врачи</a></li>
                 <li><a href="#" class="nav-link px-2 link-dark">Записи</a></li>
                 {% endif %}
                 {% if user.is_authenticated %}
