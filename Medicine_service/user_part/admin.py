@@ -6,3 +6,8 @@ from .models import Position, DoctorProfile
 @admin.register(Position)
 class PositionAdmin(admin.ModelAdmin):
     fields = ['title', 'description']
+
+
+@admin.register(DoctorProfile)
+class DoctorAdmin(admin.ModelAdmin):
+    fields = ['user', 'name', 'second_name', 'middle_name', 'birthday', 'slug', 'photo', 'position', 'address']

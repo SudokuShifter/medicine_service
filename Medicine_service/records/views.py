@@ -20,6 +20,7 @@ class DoctorListView(ListView):
             queryset = queryset.filter(address__city=city)
         if search:
             queryset = queryset.filter(second_name__icontains=search)
+        queryset = queryset.order_by('created')
         return queryset
 
     def get_context_data(self, **kwargs):

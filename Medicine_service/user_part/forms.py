@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
@@ -54,34 +55,31 @@ class CustomCreateUserForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         code = self.cleaned_data.get('code')
-
         # Проверка инвайт-кода
         invite_code = INVITE_CODE
         if code and invite_code and code == invite_code:
             user.is_staff = True  # Если код правильный, делаем пользователя врачом (staff)
-
         if commit:
             user.save()  # Сохранить пользователя перед созданием профиля
-
         # Создать профиль и slug после сохранения пользователя
         self.create_profile(user)
         return user
 
-    @staticmethod
-    def create_profile(user: User):
+    def create_profile(self, user: User):
         """
         Создаем профиль и slug для врача или обычного пользователя
         """
         if user.is_staff:
             # Создание профиля врача, если его нет
-            doctor_profile, created = DoctorProfile.objects.get_or_create(user=user)
-            doctor_profile.slug = slugify(user.username)
-            doctor_profile.save()
+            self.some_profile_create(DoctorProfile, user)
         else:
             # Создание обычного профиля пользователя
-            user_profile, created = UserProfile.objects.get_or_create(user=user)
-            user_profile.slug = slugify(user.username)
-            user_profile.save()
+            self.some_profile_create(UserProfile, user)
+
+    def some_profile_create(self, some_profile: [DoctorProfile, UserProfile], user: User):
+        profile, created = some_profile.objects.get_or_create(user=user)
+        profile.slug = f'{slugify(self.cleaned_data.get("username"))}-{user.id}'
+        profile.save()
 
 
 class CustomUpdateUserForm(forms.ModelForm):
