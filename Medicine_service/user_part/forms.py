@@ -1,6 +1,9 @@
+import os
+
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
 from django.contrib.auth.models import User
+from django.template.defaultfilters import slugify
 
 from .models import UserProfile, Address, DoctorProfile, Position
 from source.settings import INVITE_CODE
@@ -51,12 +54,34 @@ class CustomCreateUserForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         code = self.cleaned_data.get('code')
-        # Если код верный, устанавливаем is_staff = True
-        if code and code == INVITE_CODE:
-            user.is_staff = True
 
-        user.save()
+        # Проверка инвайт-кода
+        invite_code = INVITE_CODE
+        if code and invite_code and code == invite_code:
+            user.is_staff = True  # Если код правильный, делаем пользователя врачом (staff)
+
+        if commit:
+            user.save()  # Сохранить пользователя перед созданием профиля
+
+        # Создать профиль и slug после сохранения пользователя
+        self.create_profile(user)
         return user
+
+    @staticmethod
+    def create_profile(user: User):
+        """
+        Создаем профиль и slug для врача или обычного пользователя
+        """
+        if user.is_staff:
+            # Создание профиля врача, если его нет
+            doctor_profile, created = DoctorProfile.objects.get_or_create(user=user)
+            doctor_profile.slug = slugify(user.username)
+            doctor_profile.save()
+        else:
+            # Создание обычного профиля пользователя
+            user_profile, created = UserProfile.objects.get_or_create(user=user)
+            user_profile.slug = slugify(user.username)
+            user_profile.save()
 
 
 class CustomUpdateUserForm(forms.ModelForm):

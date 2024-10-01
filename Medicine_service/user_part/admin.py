@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Position
+from .models import Position, DoctorProfile
 # Register your models here.
 
 
