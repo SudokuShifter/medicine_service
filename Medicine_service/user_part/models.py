@@ -45,7 +45,7 @@ class UserProfile(models.Model):
     created = models.DateTimeField(
         auto_now_add=True)
     slug = models.SlugField(
-        default=slugify(name),
+        db_index=True,
         unique=True)
     address = models.OneToOneField(
         'Address', on_delete=models.SET_NULL,
@@ -116,7 +116,7 @@ class DoctorProfile(models.Model):
         'Address', on_delete=models.SET_NULL,
         related_name='doctor_profile', null=True, blank=True)
     slug = models.SlugField(
-        default=slugify(name),
+        db_index=True,
         unique=True)
 
     def __str__(self):

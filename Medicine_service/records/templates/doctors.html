@@ -4,111 +4,137 @@
 {% block content %}
 <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css'>
 <script src='https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js'></script>
-<link rel="stylesheet" href="{% static 'records/css/doctors.css' %}">
 <div class="container mt-3 mb-4">
-  <div class="row">
-    <!-- Боковая панель с фильтрами -->
-    <div class="col-lg-3">
-      <div class="card shadow-sm p-3 mb-4 bg-white rounded">
-        <h5 class="card-title">Фильтры</h5>
-        <form>
-          <!-- Пример фильтров -->
-          <div class="form-group">
-            <label for="jobType">Должность</label>
-            <select class="form-control" id="jobType">
-              <option>All</option>
-              <option>Remote</option>
-              <option>Onsite</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="location">Город</label>
-            <select class="form-control" id="location">
-              <option>All</option>
-              <option>Rolling Meadows, IL</option>
-              <option>Monroe Township, NJ</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="tags">Поиск</label>
-            <input type="text" class="form-control" id="tags" placeholder="Уже ищем">
-          </div>
-          <button type="submit" class="btn btn-primary btn-block">Применить</button>
-        </form>
-      </div>
-    </div>
-
-    <!-- Основная таблица -->
-    <div class="col-lg-9">
-      <div class="user-dashboard-info-box table-responsive mb-0 bg-white p-4 shadow-sm">
-        <table class="table table-bordered table-hover text-center mb-0">
-          <thead>
-            <tr>
-              <th>Имя врача</th>
-              <th>Должность</th>
-              <th>Действие</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="candidates-list">
-              <td class="title text-center">
-                <div class="thumb mx-auto" style="width: 50px; height: 50px;">
-                  <img class="img-fluid rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="">
-                </div>
-                <div class="candidate-list-details">
-                  <h5 class="mb-1"><a href="#">Brooke Kelly</a></h5>
-                  <small><i class="fas fa-filter pr-1"></i>Information Technology</small><br>
-                  <small><i class="fas fa-map-marker-alt pr-1"></i>Rolling Meadows, IL 60008</small>
-                </div>
-              </td>
-              <td class="candidate-list-favourite-time">
-                <span class="candidate-list-time text-success">Shortlisted</span>
-              </td>
-              <td class="text-center">
-                <ul class="list-inline mb-0">
-                  <li class="list-inline-item"><a href="#" class="text-primary" data-toggle="tooltip" title="View"><i class="far fa-eye"></i></a></li>
-                  <li class="list-inline-item"><a href="#" class="text-info" data-toggle="tooltip" title="Edit"><i class="fas fa-pencil-alt"></i></a></li>
-                </ul>
-              </td>
-            </tr>
-            <!-- Повторяющиеся блоки с кандидатами -->
-            <tr class="candidates-list">
-              <td class="title text-center">
-                <div class="thumb mx-auto" style="width: 50px; height: 50px;">
-                  <img class="img-fluid rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
-                </div>
-                <div class="candidate-list-details">
-                  <h5 class="mb-1"><a href="#">Ronald Bradley</a></h5>
-                  <small><i class="fas fa-filter pr-1"></i>Human Resources</small><br>
-                  <small><i class="fas fa-map-marker-alt pr-1"></i>Monroe Township, NJ 08831</small>
-                </div>
-              </td>
-              <td class="candidate-list-favourite-time">
-                <span class="candidate-list-time text-success">Shortlisted</span>
-              </td>
-              <td class="text-center">
-                <ul class="list-inline mb-0">
-                  <li class="list-inline-item"><a href="#" class="text-primary" data-toggle="tooltip" title="View"><i class="far fa-eye"></i></a></li>
-                  <li class="list-inline-item"><a href="#" class="text-info" data-toggle="tooltip" title="Edit"><i class="fas fa-pencil-alt"></i></a></li>
-                </ul>
-              </td>
-            </tr>
-            <!-- Добавьте дополнительные строки кандидатов здесь -->
-          </tbody>
-        </table>
-        <div class="text-center mt-3">
-          <ul class="pagination justify-content-center mb-0">
-            <li class="page-item disabled"> <span class="page-link">Prev</span> </li>
-            <li class="page-item active" aria-current="page"><span class="page-link">1</span></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">...</a></li>
-            <li class="page-item"><a class="page-link" href="#">25</a></li>
-            <li class="page-item"> <a class="page-link" href="#">Next</a> </li>
-          </ul>
+    <div class="row">
+        <!-- Боковая панель с фильтрами -->
+        <div class="col-lg-3">
+            <div class="card shadow-sm p-3 mb-4 bg-white rounded">
+                <h5 class="card-title">Фильтры</h5>
+                <form method="GET">
+                    <div class="form-group">
+                        <label for="position">Должность</label>
+                        <select class="form-control" id="jobType" name="position">
+                            <option value="">Все</option>
+                            {% if position %}
+                                {% for pos in position %}
+                                    <option value="{{ pos }}" {% if pos == request.GET.position %} selected {% endif %}>{{ pos }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">Город</label>
+                        <select class="form-control" id="location" name="city">
+                            <option value="">Все</option>
+                            {% if city %}
+                                {% for cit in city %}
+                                    <option value="{{ cit }}" {% if cit == request.GET.city %} selected {% endif %}>{{ cit }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="search">Поиск по фамилии</label>
+                        <input type="text" class="form-control" id="tags" name="search" value="{{ request.GET.search }}" placeholder="Уже ищем">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Применить</button>
+                </form>
+            </div>
         </div>
-      </div>
+        <!-- Основная таблица -->
+        <div class="col-lg-9">
+            <div class="user-dashboard-info-box table-responsive mb-0 bg-white p-4 shadow-sm">
+                <table class="table table-bordered table-hover text-center mb-0">
+                    <thead>
+                        <tr>
+                            <th>Имя врача</th>
+                            <th>Должность</th>
+                            <th>Действие</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for doc in doctors %}
+                        <tr class="candidates-list">
+                            <td class="title text-center">
+                                <div class="thumb mx-auto" style="width: 50px; height: 50px;">
+                                    {% if doc.photo %}
+                                        <img class="img-fluid rounded-circle" src="{{ doc.photo.url }}" alt="Фото">
+                                    {% else %}
+                                        <img class="img-fluid rounded-circle" src="{% static 'default.jpg' %}" alt="Фото">
+                                    {% endif %}
+                                </div>
+                                <div class="candidate-list-details">
+                                    <h5 class="mb-1"><a href="#">{{ doc.name }} {{ doc.second_name }}</a></h5>
+                                    <small><i class="fas fa-filter pr-1"></i>{{ doc.user.email }}</small><br>
+                                    <small><i class="fas fa-map-marker-alt pr-1"></i>{{ doc.address }}</small>
+                                </div>
+                            </td>
+                            <td class="candidate-list-favourite-time">
+                                <span class="candidate-list-time text-success">{{ doc.position.title }}</span>
+                            </td>
+                            <td class="text-center">
+                                <ul class="list-inline mb-0">
+                                    <li class="list-inline-item"><a href="#" class="text-primary" data-toggle="tooltip" title="View"><i class="far fa-eye"></i></a></li>
+                                    <li class="list-inline-item"><a href="#" class="text-info" data-toggle="tooltip" title="Edit"><i class="fas fa-pencil-alt"></i></a></li>
+                                    <li class="list-inline-item">
+                                        <a href="#" class="text-success" data-toggle="tooltip" title="Like">
+                                            <i class="far fa-thumbs-up"></i> <span class="like-count">10</span>
+                                        </a>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a href="#" class="text-danger" data-toggle="tooltip" title="Dislike">
+                                            <i class="far fa-thumbs-down"></i> <span class="dislike-count">2</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="text-center mt-3">
+                    <ul class="pagination justify-content-center mb-0">
+                        {% if doctors.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% if request.GET.position %}&position={{ request.GET.position }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="First">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ doctors.previous_page_number }}{% if request.GET.position %}&position={{ request.GET.position }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Prev</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">Prev</span>
+                            </li>
+                        {% endif %}
+
+                        {% for i in doctors.paginator.page_range %}
+                            {% if doctors.number == i %}
+                                <li class="page-item active" aria-current="page"><span class="page-link">{{ i }}</span></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="?page={{ i }}{% if request.GET.position %}&position={{ request.GET.position }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if doctors.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ doctors.next_page_number }}{% if request.GET.position %}&position={{ request.GET.position }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ doctors.paginator.num_pages }}{% if request.GET.position %}&position={{ request.GET.position }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">Next</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 {% endblock %}
