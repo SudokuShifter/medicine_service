@@ -4,6 +4,7 @@
 {% block content %}
 <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css'>
 <script src='https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js'></script>
+
 <div class="container mt-3 mb-4">
     <div class="row">
         <!-- Боковая панель с фильтрами -->
@@ -15,32 +16,32 @@
                         <label for="position">Должность</label>
                         <select class="form-control" id="jobType" name="position">
                             <option value="">Все</option>
-                            {% if position %}
-                                {% for pos in position %}
-                                    <option value="{{ pos }}" {% if pos == request.GET.position %} selected {% endif %}>{{ pos }}</option>
-                                {% endfor %}
-                            {% endif %}
+                            {% for pos in position %}
+                            <option value="{{ pos }}" {% if pos == request.GET.position %} selected {% endif %}>{{ pos }}</option>
+                            {% endfor %}
                         </select>
                     </div>
+
                     <div class="form-group">
                         <label for="city">Город</label>
                         <select class="form-control" id="location" name="city">
                             <option value="">Все</option>
-                            {% if city %}
-                                {% for cit in city %}
-                                    <option value="{{ cit }}" {% if cit == request.GET.city %} selected {% endif %}>{{ cit }}</option>
-                                {% endfor %}
-                            {% endif %}
+                            {% for cit in city %}
+                            <option value="{{ cit }}" {% if cit == request.GET.city %} selected {% endif %}>{{ cit }}</option>
+                            {% endfor %}
                         </select>
                     </div>
+
                     <div class="form-group">
                         <label for="search">Поиск по фамилии</label>
                         <input type="text" class="form-control" id="tags" name="search" value="{{ request.GET.search }}" placeholder="Уже ищем">
                     </div>
+
                     <button type="submit" class="btn btn-primary btn-block">Применить</button>
                 </form>
             </div>
         </div>
+
         <!-- Основная таблица -->
         <div class="col-lg-9">
             <div class="user-dashboard-info-box table-responsive mb-0 bg-white p-4 shadow-sm">
@@ -58,14 +59,14 @@
                             <td class="title text-center">
                                 <div class="thumb mx-auto" style="width: 50px; height: 50px;">
                                     {% if doc.photo %}
-                                        <img class="img-fluid rounded-circle" src="{{ doc.photo.url }}" alt="Фото">
+                                    <img class="img-fluid rounded-circle" src="{{ doc.photo.url }}" alt="Фото">
                                     {% else %}
-                                        <img class="img-fluid rounded-circle" src="{% static 'default.jpg' %}" alt="Фото">
+                                    <img class="img-fluid rounded-circle" src="{% static 'default.jpg' %}" alt="Фото">
                                     {% endif %}
                                 </div>
                                 <div class="candidate-list-details">
                                     <h5 class="mb-1"><a href="#">{{ doc.name }} {{ doc.second_name }}</a></h5>
-                                    <small><i class="fas fa-filter pr-1"></i>{{ doc.user.email }}</small><br>
+                                    <small><i class="fas fa-envelope pr-1"></i>{{ doc.user.email }}</small><br>
                                     <small><i class="fas fa-map-marker-alt pr-1"></i>{{ doc.address }}</small>
                                 </div>
                             </td>
@@ -74,8 +75,16 @@
                             </td>
                             <td class="text-center">
                                 <ul class="list-inline mb-0">
-                                    <li class="list-inline-item"><a href="#" class="text-primary" data-toggle="tooltip" title="View"><i class="far fa-eye"></i></a></li>
-                                    <li class="list-inline-item"><a href="#" class="text-info" data-toggle="tooltip" title="Edit"><i class="fas fa-pencil-alt"></i></a></li>
+                                    <li class="list-inline-item">
+                                        <a href="#" class="text-primary" data-toggle="tooltip" title="View">
+                                            <i class="far fa-eye"></i>
+                                        </a>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a href="#" class="text-info" data-toggle="tooltip" title="Edit">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </a>
+                                    </li>
                                     <li class="list-inline-item">
                                         <a href="#" class="text-success" data-toggle="tooltip" title="Like">
                                             <i class="far fa-thumbs-up"></i> <span class="like-count">10</span>
@@ -92,47 +101,66 @@
                         {% endfor %}
                     </tbody>
                 </table>
+
+                <!-- Пагинация -->
                 <div class="text-center mt-3">
-                    <ul class="pagination justify-content-center mb-0">
-                        {% if doctors.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page=1{% if request.GET.position %}&position={{ request.GET.position }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="First">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ doctors.previous_page_number }}{% if request.GET.position %}&position={{ request.GET.position }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Prev</a>
-                            </li>
-                        {% else %}
-                            <li class="page-item disabled">
-                                <span class="page-link">Prev</span>
-                            </li>
-                        {% endif %}
+    <ul class="pagination justify-content-center mb-0">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link"
+               href="?page=1{% if request.GET.position %}&position={{ request.GET.position }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+               aria-label="First">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link"
+               href="?page={{ page_obj.previous_page_number }}{% if request.GET.position %}&position={{ request.GET.position }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                Prev
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Prev</span>
+        </li>
+        {% endif %}
 
-                        {% for i in doctors.paginator.page_range %}
-                            {% if doctors.number == i %}
-                                <li class="page-item active" aria-current="page"><span class="page-link">{{ i }}</span></li>
-                            {% else %}
-                                <li class="page-item"><a class="page-link" href="?page={{ i }}{% if request.GET.position %}&position={{ request.GET.position }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">{{ i }}</a></li>
-                            {% endif %}
-                        {% endfor %}
+        {% for i in paginator.page_range %}
+        {% if page_obj.number == i %}
+        <li class="page-item active" aria-current="page">
+            <span class="page-link">{{ i }}</span>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link"
+               href="?page={{ i }}{% if request.GET.position %}&position={{ request.GET.position }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                {{ i }}
+            </a>
+        </li>
+        {% endif %}
+        {% endfor %}
 
-                        {% if doctors.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ doctors.next_page_number }}{% if request.GET.position %}&position={{ request.GET.position }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Next</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ doctors.paginator.num_pages }}{% if request.GET.position %}&position={{ request.GET.position }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="Last">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        {% else %}
-                            <li class="page-item disabled">
-                                <span class="page-link">Next</span>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link"
+               href="?page={{ page_obj.next_page_number }}{% if request.GET.position %}&position={{ request.GET.position }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                Next
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link"
+               href="?page={{ paginator.num_pages }}{% if request.GET.position %}&position={{ request.GET.position }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+               aria-label="Last">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Next</span>
+        </li>
+        {% endif %}
+    </ul>
+</div>
             </div>
         </div>
     </div>

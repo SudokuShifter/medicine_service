@@ -48,8 +48,10 @@ class UserProfile(models.Model):
         db_index=True,
         unique=True)
     address = models.OneToOneField(
-        'Address', on_delete=models.SET_NULL,
-        related_name='user_profile', null=True, blank=True)
+        'Address',
+        on_delete=models.SET_NULL,
+        related_name='user_profile',
+        null=True, blank=True)
 
     def __str__(self):
         return f'{self.second_name} {self.name} {self.middle_name}'
@@ -113,8 +115,10 @@ class DoctorProfile(models.Model):
         related_name='doctors',
         null=True, blank=True)
     address = models.OneToOneField(
-        'Address', on_delete=models.SET_NULL,
-        related_name='doctor_profile', null=True, blank=True)
+        'Address',
+        on_delete=models.SET_NULL,
+        related_name='doctor_profile',
+        null=True, blank=True)
     slug = models.SlugField(
         db_index=True,
         unique=True)
