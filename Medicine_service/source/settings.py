@@ -142,6 +142,3 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGOUT_REDIRECT_URL = '/'
-
-load_dotenv()
-INVITE_CODE = os.getenv('INVITE_CODE')
