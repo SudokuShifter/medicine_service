@@ -122,6 +122,11 @@ class DoctorProfile(models.Model):
     slug = models.SlugField(
         db_index=True,
         unique=True)
+    patients = models.ManyToManyField(
+        'UserProfile',
+        through='records.PatientDoctorRelation',
+        related_name='doctors'
+    )
 
     def __str__(self):
         return f'{self.name} {self.second_name} {self.middle_name} в должности {self.position}'

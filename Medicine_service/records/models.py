@@ -52,3 +52,22 @@ class PatientStory(models.Model):
     )
     description = models.TextField(
         blank=True, null=True)
+
+
+class PatientDoctorRelation(models.Model):
+    patient = models.ForeignKey(
+        'user_part.UserProfile',
+        on_delete=models.CASCADE,
+        related_name='rating'
+    )
+    doctor = models.ForeignKey(
+        'user_part.DoctorProfile',
+        on_delete=models.CASCADE,
+        related_name='rating'
+    )
+    like = models.BooleanField(
+        default=False
+    )
+    dislike = models.BooleanField(
+        default=False
+    )

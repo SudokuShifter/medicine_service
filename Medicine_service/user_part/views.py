@@ -60,9 +60,6 @@ class UserProfileCreateView(UpdateView):
     template_name = 'user_part/edit_data.html'
     success_url = reverse_lazy('register_address')
 
-    def check_is_staff(self):
-        return self.request.user.is_staff
-
     def dispatch(self, request, *args, **kwargs):
         # Проверяем, завершил ли пользователь первый этап регистрации
         if not self.request.user.is_authenticated:
@@ -78,7 +75,7 @@ class UserProfileCreateView(UpdateView):
         return obj
 
     def get_form_class(self):
-        return CustomUpdateDoctorForm if self.check_is_staff() else CustomUpdateUserForm
+        return CustomUpdateDoctorForm if self.request.user.is_staff else CustomUpdateUserForm
 
 
 class UserAddressCreateView(UpdateView):
