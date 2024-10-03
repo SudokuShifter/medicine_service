@@ -82,6 +82,11 @@ class DoctorProfile(models.Model):
     Так же имеет связь с моделью Records.
     Чтобы запросить записи пациентов, нужно сделать следующее:
     self.user.doctor_profile.records
+
+    Так же имеет связь с моделью PatientDoctorRelation из приложения records.
+    PatientDoctorRelation-модель отвечает за лайки и дизлайки, которые можно будет поставить врачу.
+    Она имеет внешний ключ к Пациенту и к Доктору, что и означает своеобразную ManyToMany связь.
+    Чтобы обозначить вспомогательную таблицу конкретной моделью, я использовал параметр through
     """
     user = models.OneToOneField(
         User, on_delete=models.CASCADE,

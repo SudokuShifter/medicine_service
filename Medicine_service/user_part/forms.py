@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from dotenv import load_dotenv
 
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
@@ -7,7 +7,8 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 
 from .models import UserProfile, Address, DoctorProfile, Position
-from source.settings import INVITE_CODE
+
+load_dotenv()
 
 
 class CustomCreateUserForm(UserCreationForm):
@@ -56,7 +57,7 @@ class CustomCreateUserForm(UserCreationForm):
         user = super().save(commit=False)
         code = self.cleaned_data.get('code')
         # Проверка инвайт-кода
-        invite_code = INVITE_CODE
+        invite_code = os.getenv('INVITE_CODE')
         if code and invite_code and code == invite_code:
             user.is_staff = True  # Если код правильный, делаем пользователя врачом (staff)
         if commit:
@@ -76,7 +77,7 @@ class CustomCreateUserForm(UserCreationForm):
             # Создание обычного профиля пользователя
             self.some_profile_create(UserProfile, user)
 
-    def some_profile_create(self, some_profile: [DoctorProfile, UserProfile], user: User):
+    def some_profile_create(self, some_profile: DoctorProfile | UserProfile, user: User):
         profile, created = some_profile.objects.get_or_create(user=user)
         profile.slug = f'{slugify(self.cleaned_data.get("username"))}-{user.id}'
         profile.save()
