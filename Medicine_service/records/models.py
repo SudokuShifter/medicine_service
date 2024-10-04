@@ -30,9 +30,11 @@ class PatientRecord(models.Model):
         default=datetime.date.today() + datetime.timedelta(days=1)
     )
     description_patient = models.TextField(
+        blank=True, null=True,
         verbose_name='заметки пациента'
     )
     description = models.TextField(
+        blank=True, null=True,
         verbose_name='Заметки врача')
 
     class Meta:

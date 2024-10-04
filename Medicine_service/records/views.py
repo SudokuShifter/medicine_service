@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import CreateView, ListView, View
 from django.views.generic.edit import BaseCreateView
 from django.db.models import Count, Q
+from django.urls import reverse_lazy
 
 from .models import PatientDoctorRelation, PatientRecord
 from user_part.models import DoctorProfile, Position
@@ -62,3 +63,13 @@ class CreateRecord(CreateView):
         context['user_data'] = self.request.user.user_profile
         context['doctor_data'] = DoctorProfile.objects.get(pk=self.kwargs.get('pk'))
         return context
+
+    def get_success_url(self):
+        user_profile = self.request.user.user_profile
+        return reverse_lazy('lk', kwargs={'slug': user_profile.slug})
+
+    def form_valid(self, form):
+        patient_record = form.save(commit=False)
+        patient_record.doctor = DoctorProfile.objects.get(pk=self.kwargs.get('pk'))
+        patient_record.patient = self.request.user.user_profile
+        return super().form_valid(form)

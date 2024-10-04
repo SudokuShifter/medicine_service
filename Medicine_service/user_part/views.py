@@ -58,7 +58,6 @@ class UserProfileCreateView(UpdateView):
     Отвечает за 2й этап регистрации пользователя (добавление личных данных)
     """
     template_name = 'user_part/edit_data.html'
-    success_url = reverse_lazy('register_address')
 
     def dispatch(self, request, *args, **kwargs):
         # Проверяем, завершил ли пользователь первый этап регистрации
@@ -76,6 +75,14 @@ class UserProfileCreateView(UpdateView):
 
     def get_form_class(self):
         return CustomUpdateDoctorForm if self.request.user.is_staff else CustomUpdateUserForm
+
+    def check_model(self):
+        user = self.request.user
+        return user.doctor_profile if user.is_staff else user.user_profile
+
+    def get_success_url(self):
+        user_profile = self.check_model()
+        return reverse_lazy('lk', kwargs={'slug': user_profile.slug})
 
 
 class UserAddressCreateView(UpdateView):
@@ -128,8 +135,12 @@ class UserLk(DetailView):
         context = super().get_context_data(**kwargs)
         user_data = self.get_object()
         context['user_data'] = user_data
-        context['records'] = user_data.records
-        context['records_count'] = user_data.records.count()
+        if self.request.user.is_staff:
+            context['records'] = user_data.patient_records
+            context['records_count'] = user_data.patient_records.count()
+        else:
+            context['records'] = user_data.doctor_records
+            context['records_count'] = user_data.doctor_records.count()
         context['age'] = calculate_age(user_data.birthday)
         context['address'] = user_data.address
         return context
