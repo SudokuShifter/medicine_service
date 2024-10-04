@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 import datetime
 # Create your models here.
@@ -17,12 +18,18 @@ class PatientRecord(models.Model):
         'user_part.UserProfile',
         on_delete=models.CASCADE,
         verbose_name='Пациент',
-        related_name='records')
+        related_name='doctor_records')
     doctor = models.ForeignKey(
         'user_part.DoctorProfile',
         on_delete=models.PROTECT,
         verbose_name='Врач',
-        related_name='records')
+        related_name='patient_records')
+    create_at = models.DateTimeField(
+        auto_now_add=True
+    )
+    description_patient = models.TextField(
+        verbose_name='заметки пациента'
+    )
     description = models.TextField(
         verbose_name='Заметки врача')
 
@@ -71,3 +78,8 @@ class PatientDoctorRelation(models.Model):
     dislike = models.BooleanField(
         default=False
     )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['patient',  'doctor'], name='patient_doctor_unique')
+        ]

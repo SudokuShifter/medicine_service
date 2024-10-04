@@ -85,15 +85,27 @@
                                             <i class="fas fa-pencil-alt"></i>
                                         </a>
                                     </li>
-                                    <li class="list-inline-item">
-                                        <a href="#" class="text-success" data-toggle="tooltip" title="Like">
-                                            <i class="far fa-thumbs-up"></i> <span class="like-count">10</span>
-                                        </a>
+                                   <li class="list-inline-item">
+                                        <!-- Форма для лайка -->
+                                        <form method="POST" action="{% url 'rate_doc' doc.pk %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="like">
+                                            <button type="submit" class="btn btn-link text-success p-0" data-toggle="tooltip" title="Like">
+                                                <i class="far fa-thumbs-up"></i>
+                                                <span class="like-count">{{ doc.likes|default:0 }}</span>
+                                            </button>
+                                        </form>
                                     </li>
                                     <li class="list-inline-item">
-                                        <a href="#" class="text-danger" data-toggle="tooltip" title="Dislike">
-                                            <i class="far fa-thumbs-down"></i> <span class="dislike-count">2</span>
-                                        </a>
+                                        <!-- Форма для дизлайка -->
+                                        <form method="POST" action="{% url 'rate_doc' doc.pk %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="dislike">
+                                            <button type="submit" class="btn btn-link text-danger p-0" data-toggle="tooltip" title="Dislike">
+                                                <i class="far fa-thumbs-down"></i>
+                                                <span class="dislike-count">{{ doc.dislikes|default:0 }}</span>
+                                            </button>
+                                        </form>
                                     </li>
                                 </ul>
                             </td>
