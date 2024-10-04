@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, ListView, View
+from django.views.generic.edit import BaseCreateView
 from django.db.models import Count, Q
 
-from .models import PatientDoctorRelation
+from .models import PatientDoctorRelation, PatientRecord
 from user_part.models import DoctorProfile, Position
+from .forms import RecordForm
 
 
 class DoctorListView(ListView):
@@ -45,6 +47,17 @@ class RateDoctorView(View):
         action = request.POST.get('action')
         relation, created = (PatientDoctorRelation.objects.
                              get_or_create(patient=patient, doctor=doctor))
-        relation.like, relation.dislike = (True, False) if action=='like' else (False, True)
+        relation.like, relation.dislike = (True, False) if action == 'like' else (False, True)
         relation.save()
         return redirect('doc_list')
+
+
+class CreateRecord(BaseCreateView):
+    model = PatientRecord
+    form_class = RecordForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_data'] = self.request.user.user_profile
+        context['doctor_data'] = DoctorProfile.objects.get(pk=self.kwargs.get('pk'))
+        return context

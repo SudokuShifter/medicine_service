@@ -1,7 +1,6 @@
-from django.db import models
-from django.utils import timezone
-
 import datetime
+
+from django.db import models
 # Create your models here.
 
 
@@ -26,6 +25,9 @@ class PatientRecord(models.Model):
         related_name='patient_records')
     create_at = models.DateTimeField(
         auto_now_add=True
+    )
+    appointment_date = models.DateTimeField(
+        default=datetime.date.today() + datetime.timedelta(days=1)
     )
     description_patient = models.TextField(
         verbose_name='заметки пациента'
