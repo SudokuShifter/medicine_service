@@ -62,7 +62,7 @@
                             </span></li>
                             <li><i class="bi bi-chevron-right"></i> <strong>Адрес:</strong> <span>
                                 {% if address.country is None %}
-                                <a href="{% url 'register_address' %}">Заполнить адрес</a>
+                                <a href="{% url 'edit_address' slug=user_data.slug %}">Заполнить адрес</a>
                                 {% else %}
                                 {{ user_data.address }}
                                 {% endif %}
@@ -83,10 +83,14 @@
                 <p class="py-3">
                     Будьте здоровы!
                 </p>
-                <div class="col-lg-4">
-                <a href="{% url 'edit_data' %}" class="btn btn-outline-primary me-2">Изменить данные</a>
-            </div>
-            </div>
+                <div class="row py-3">
+    <div class="col-lg-6">
+        <a href="{% url 'edit_data' slug=user_data.slug %}" class="btn btn-outline-primary w-100">Изменить данные</a>
+    </div>
+    <div class="col-lg-6">
+        <a href="{% url 'edit_address' slug=user_data.slug %}" class="btn btn-outline-primary w-100">Изменить адрес</a>
+    </div>
+</div>
 
         </div>
 

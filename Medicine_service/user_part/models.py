@@ -52,6 +52,11 @@ class UserProfile(models.Model):
         on_delete=models.SET_NULL,
         related_name='user_profile',
         null=True, blank=True)
+    records = models.ManyToManyField(
+        'DoctorProfile',
+        through='records.PatientRecord',
+        related_name='patients_records'
+    )
 
     def __str__(self):
         return f'{self.second_name} {self.name} {self.middle_name}'
