@@ -66,6 +66,10 @@ class RateDoctorView(View):
 
 
 class CreateRecord(CreateView):
+    """
+    Класс CreateRecord наследуется от CreateView. В классе реализован достаточно стандартный интерфейс
+    для сбора данных из формы с занесением в бд.
+    """
     model = PatientRecord
     form_class = RecordForm
     template_name = 'record_form.html'
