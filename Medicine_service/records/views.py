@@ -48,6 +48,12 @@ class DoctorListView(ListView):
 
 
 class RateDoctorView(View):
+    """
+    Класс RateDoctorView наследуется от базового класса View. В классе определён метод post,
+    для передачи оценки (лайк/дизлайк) в модель PatientDoctorRelation со связью Многие Ко Многим.
+    Через шаблон передаётся action, pk врача и pk пациента и вносится в базу данных.
+    При этом комбинация врача и пациента должна быть уникальной, чтобы пациент не смог поставить более 1й оценки врачу
+    """
     def post(self, request, pk):
         doctor = DoctorProfile.objects.get(pk=pk)
         patient = self.request.user.user_profile
