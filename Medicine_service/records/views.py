@@ -10,6 +10,12 @@ from .forms import RecordForm
 
 
 class DoctorListView(ListView):
+    """
+    Класс DoctorListView наследуется от ListView. Определён с целью отображения списка доступных докторов,
+    которые могут принять пациента по записи.
+    Свойство paginate_by - параметр отображения объектов на 1 странице, то есть ограничитель в 10 экземпляров.
+    Так же переопределён метод get_queryset, чтобы соответствовать реализуемой фильтрации внутри шаблона.
+    """
     model = DoctorProfile
     template_name = 'doctors.html'
     context_object_name = 'doctors'
