@@ -11,8 +11,15 @@ class PatientRecord(models.Model):
     но при этом конкретная запись принадлежала лишь 1-му пациенту.
     Имеет связь с моделью DoctorProfile, так чтобы у одного врача могло быть много записей,
     но конкретная запись принадлежала лишь 1-му врачу.
-    """
 
+    Имеет формат промежуточной таблицы для связи ManyToMany в модели user_part.PatientProfile
+    И выглядит это следующим образом:
+    records = models.ManyToManyField(
+        'DoctorProfile',
+        through='records.PatientRecord', ---> through ключевое слово для указания модели
+        related_name='patients_records'
+    )
+    """
     patient = models.ForeignKey(
         'user_part.UserProfile',
         on_delete=models.CASCADE,

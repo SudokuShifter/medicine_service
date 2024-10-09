@@ -10,6 +10,12 @@ from .forms import RecordForm
 
 
 class DoctorListView(ListView):
+    """
+    Класс DoctorListView наследуется от ListView. Определён с целью отображения списка доступных докторов,
+    которые могут принять пациента по записи.
+    Свойство paginate_by - параметр отображения объектов на 1 странице, то есть ограничитель в 10 экземпляров.
+    Так же переопределён метод get_queryset, чтобы соответствовать реализуемой фильтрации внутри шаблона.
+    """
     model = DoctorProfile
     template_name = 'doctors.html'
     context_object_name = 'doctors'
@@ -42,6 +48,12 @@ class DoctorListView(ListView):
 
 
 class RateDoctorView(View):
+    """
+    Класс RateDoctorView наследуется от базового класса View. В классе определён метод post,
+    для передачи оценки (лайк/дизлайк) в модель PatientDoctorRelation со связью Многие Ко Многим.
+    Через шаблон передаётся action, pk врача и pk пациента и вносится в базу данных.
+    При этом комбинация врача и пациента должна быть уникальной, чтобы пациент не смог поставить более 1й оценки врачу
+    """
     def post(self, request, pk):
         doctor = DoctorProfile.objects.get(pk=pk)
         patient = self.request.user.user_profile
@@ -54,6 +66,10 @@ class RateDoctorView(View):
 
 
 class CreateRecord(CreateView):
+    """
+    Класс CreateRecord наследуется от CreateView. В классе реализован достаточно стандартный интерфейс
+    для сбора данных из формы с занесением в бд.
+    """
     model = PatientRecord
     form_class = RecordForm
     template_name = 'record_form.html'
