@@ -73,16 +73,13 @@ class CreateRecord(CreateView):
     model = PatientRecord
     form_class = RecordForm
     template_name = 'record_form.html'
+    success_url = reverse_lazy('check_records')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['user_data'] = self.request.user.user_profile
         context['doctor_data'] = DoctorProfile.objects.get(pk=self.kwargs.get('pk'))
         return context
-
-    def get_success_url(self):
-        user_profile = self.request.user.user_profile
-        return reverse_lazy('lk', kwargs={'slug': user_profile.slug})
 
     def form_valid(self, form):
         patient_record = form.save(commit=False)
