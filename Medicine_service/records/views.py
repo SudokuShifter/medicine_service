@@ -89,3 +89,15 @@ class CreateRecord(CreateView):
         patient_record.doctor = DoctorProfile.objects.get(pk=self.kwargs.get('pk'))
         patient_record.patient = self.request.user.user_profile
         return super().form_valid(form)
+
+
+class CheckRecords(ListView):
+    model = PatientRecord
+    template_name = 'check_records.html'
+    context_object_name = 'records'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = PatientRecord.objects.get(patient=self.request.user.user_profile)
+        queryset.order_by('appointment_date')
+        return queryset

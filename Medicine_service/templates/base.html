@@ -29,7 +29,7 @@
                 <li><a href="#" class="nav-link px-2 link-dark">Записи пациентов</a></li>
                 {% else %}
                 <li><a href="{% url 'doc_list' %}" class="nav-link px-2 link-dark">Доступные врачи</a></li>
-                <li><a href="#" class="nav-link px-2 link-dark">Записи</a></li>
+                <li><a href="{% url 'check_records' %}" class="nav-link px-2 link-dark">Записи</a></li>
                 {% endif %}
                 {% if user.is_authenticated %}
                     {% if user.is_staff %}
