@@ -98,6 +98,6 @@ class CheckRecords(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = PatientRecord.objects.get(patient=self.request.user.user_profile)
+        queryset = PatientRecord.objects.filter(patient=self.request.user.user_profile)
         queryset.order_by('appointment_date')
         return queryset
