@@ -141,6 +141,9 @@ class DoctorProfile(models.Model):
     def __str__(self):
         return f'{self.name} {self.second_name} {self.middle_name} в должности {self.position}'
 
+    def get_name(self):
+        return f'{self.second_name} {self.name} {self.middle_name}'
+
     class Meta:
         verbose_name = 'Доктор'
         verbose_name_plural = 'Доктора'

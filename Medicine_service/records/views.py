@@ -73,6 +73,7 @@ class CreateRecord(CreateView):
     model = PatientRecord
     form_class = RecordForm
     template_name = 'record_form.html'
+    success_url = reverse_lazy('check_records')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -80,12 +81,20 @@ class CreateRecord(CreateView):
         context['doctor_data'] = DoctorProfile.objects.get(pk=self.kwargs.get('pk'))
         return context
 
-    def get_success_url(self):
-        user_profile = self.request.user.user_profile
-        return reverse_lazy('lk', kwargs={'slug': user_profile.slug})
-
     def form_valid(self, form):
         patient_record = form.save(commit=False)
         patient_record.doctor = DoctorProfile.objects.get(pk=self.kwargs.get('pk'))
         patient_record.patient = self.request.user.user_profile
         return super().form_valid(form)
+
+
+class CheckRecords(ListView):
+    model = PatientRecord
+    template_name = 'check_records.html'
+    context_object_name = 'records'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = PatientRecord.objects.filter(patient=self.request.user.user_profile)
+        queryset.order_by('appointment_date')
+        return queryset
