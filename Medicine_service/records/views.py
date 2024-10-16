@@ -90,6 +90,9 @@ class CreateRecord(CreateView):
 
 
 class CheckRecords(ListView):
+    """
+    Класс CheckRecords наследуется от ListView. Служит для отображения списка записей
+    """
     model = PatientRecord
     template_name = 'check_records.html'
     context_object_name = 'records'
