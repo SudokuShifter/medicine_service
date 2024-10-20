@@ -91,7 +91,9 @@ class CreateRecord(CreateView):
 
 class CheckRecords(ListView):
     """
-    Класс CheckRecords наследуется от ListView. Служит для отображения списка записей
+    Класс CheckRecords наследуется от ListView. Служит для отображения списка записей.
+    Переопределён метод get_queryset для прокидывания записей пользователя в темплейт.
+    В темплейте queryset называется records
     """
     model = PatientRecord
     template_name = 'check_records.html'
