@@ -93,6 +93,9 @@ class CustomCreateUserForm(UserCreationForm):
 
 
 class CustomUpdateUserForm(forms.ModelForm):
+    """
+    CustomUpdateUserForm - форма для создания иои обновления информации в профиле юзера.
+    """
     class Meta:
         model = UserProfile
         fields = [
@@ -111,6 +114,9 @@ class CustomUpdateUserForm(forms.ModelForm):
 
 
 class CustomUpdateDoctorForm(forms.ModelForm):
+    """
+    CustomUpdateDoctorForm - форма для создания или обновления информации в профили врача
+    """
     position = forms.ModelChoiceField(
         queryset=Position.objects.all(),
         required=True, label='Должность')
@@ -141,6 +147,10 @@ class CustomUpdateDoctorForm(forms.ModelForm):
 
 
 class CustomUpdateUserAddressForm(forms.ModelForm):
+    """
+    CustomUpdateUserAddressForm - форма для создания или обновления адреса врача или юзера
+    (в зависимости от клиента)
+    """
     class Meta:
         model = Address
         fields = [
