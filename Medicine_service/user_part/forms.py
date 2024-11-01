@@ -12,6 +12,15 @@ load_dotenv()
 
 
 class CustomCreateUserForm(UserCreationForm):
+    """
+    Класс CustomCreateUserForm наследуется от UserCreationForm (заготовленный класс джанги
+    для создания BaseUser.
+    В классе определено доп. поле code для регистрации доктора.
+    Так же внутри формы реализованы валидаторы полей и переопределен метод save
+    для корректного сохранения объекта моделию.
+    И определили 2 метода для определения принадлежности аккаунта к той или иной модели
+    - это create_profile и some_profile_create
+    """
     code = forms.CharField(
         max_length=10, min_length=3, required=False,
         widget=forms.TextInput(attrs={'placeholder': 'Инвайт-код (если вы врач)'}))
@@ -84,6 +93,9 @@ class CustomCreateUserForm(UserCreationForm):
 
 
 class CustomUpdateUserForm(forms.ModelForm):
+    """
+    CustomUpdateUserForm - форма для создания иои обновления информации в профиле юзера.
+    """
     class Meta:
         model = UserProfile
         fields = [
@@ -102,6 +114,9 @@ class CustomUpdateUserForm(forms.ModelForm):
 
 
 class CustomUpdateDoctorForm(forms.ModelForm):
+    """
+    CustomUpdateDoctorForm - форма для создания или обновления информации в профили врача
+    """
     position = forms.ModelChoiceField(
         queryset=Position.objects.all(),
         required=True, label='Должность')
@@ -132,6 +147,10 @@ class CustomUpdateDoctorForm(forms.ModelForm):
 
 
 class CustomUpdateUserAddressForm(forms.ModelForm):
+    """
+    CustomUpdateUserAddressForm - форма для создания или обновления адреса врача или юзера
+    (в зависимости от клиента)
+    """
     class Meta:
         model = Address
         fields = [
