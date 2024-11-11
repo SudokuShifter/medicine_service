@@ -27,7 +27,7 @@
                 <h2>{{ user_data.name }} {{ user_data.second_name }} {{ user_data.middle_name }}</h2>
                 <p class="fst-italic py-3">
                         {% if records.last %}
-                            Последняя запись была: {{ records.last.appointment_time }}
+                            Последняя запись была: {{ records.last.appointment_date }}
                         {% else %}
                             Записей пока не было
                         {% endif %}
@@ -41,7 +41,7 @@
                                 <span>{{ user.email }}</span></li>
                             <li><i class="bi bi-chevron-right"></i> <strong>Login:</strong>
                                 <span>{{ user.username }}</span></li>
-                            <li><i class="bi bi-chevron-right"></i> <strong>Кол-во посещений:</strong> <span>{{ records_count }}</span>
+                            <li><i class="bi bi-chevron-right"></i> <strong>Кол-во записей:</strong> <span>{{ records_count }}</span>
                             </li>
                         </ul>
                     </div>
@@ -70,7 +70,7 @@
                             </li>
                             <li><i class="bi bi-chevron-right"></i> <strong>Последняя запись:</strong>
                                 <span> {% if records.last %}
-                                        {{ records.last.appointment_time }}
+                                        {{ records.last.appointment_date }}
                                         {% else %}
                                         Записей пока не было
                                         {% endif %}

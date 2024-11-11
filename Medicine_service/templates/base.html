@@ -24,25 +24,26 @@
             <ul class="nav mb-2 justify-content-center">
                 <li><a href="{% url 'home' %}" class="nav-link px-2 link-secondary">Главная</a></li>
                 {% if user.is_staff %}
-                <li><a href="#" class="nav-link px-2 link-dark">Рейтинг врачей</a></li>
-                <li><a href="#" class="nav-link px-2 link-dark">Доступные пациенты</a></li>
-                <li><a href="#" class="nav-link px-2 link-dark">Записи пациентов</a></li>
+                <li><a href="{% url 'doctor_rate' %}" class="nav-link px-2 link-dark">Рейтинг врачей</a></li>
+                <li><a href="{% url 'patient_records' %}" class="nav-link px-2 link-dark">Записи пациентов</a></li>
                 {% else %}
                 <li><a href="{% url 'doc_list' %}" class="nav-link px-2 link-dark">Доступные врачи</a></li>
                 <li><a href="{% url 'check_records' %}" class="nav-link px-2 link-dark">Записи</a></li>
                 {% endif %}
-                {% if user.is_authenticated %}
-                    {% if user.is_staff %}
+                {% if user.is_superuser %}
+                    <li><a href="#" class="nav-link px-2 link-dark">Личный кабинет</a></li>
+                {% elif user.is_authenticated %}
+                    {% if user.doctor_profile %}
                         <li><a href="{% url 'lk' slug=user.doctor_profile.slug %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>
-                    {% elif not user.is_staff %}
+                    {% elif user.user_profile %}
                         <li><a href="{% url 'lk' slug=user.user_profile.slug %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>
                     {% else %}
                         <li><a href="{% url 'edit_data' %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>
-                    {% endif %}
+                {% endif %}
                 {% else %}
                     <li><a href="{% url 'login' %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>
                 {% endif %}
-                <li><a href="#" class="nav-link px-2 link-dark">FAQ</a></li>
+                <li><a href="{% url 'faq_main' %}" class="nav-link px-2 link-dark">FAQ</a></li>
             </ul>
         </div>
 

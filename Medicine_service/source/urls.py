@@ -23,7 +23,8 @@ from . import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('user_part.urls')),
-    path('records/', include('records.urls'))
+    path('records/', include('records.urls')),
+    path('FAQ/', include('FAQ.urls')),
 ]
 
 if settings.DEBUG:

@@ -1,12 +1,12 @@
 from django.shortcuts import redirect
 from django.views.generic import CreateView, ListView, View
 from django.views.generic.edit import UpdateView, DeleteView
-from django.db.models import Count, Q
+from django.db.models import Count, Q, ExpressionWrapper, F, IntegerField
 from django.urls import reverse_lazy
 
 from .models import PatientDoctorRelation, PatientRecord
 from user_part.models import DoctorProfile, Position
-from .forms import RecordForm
+from .forms import RecordForm, SetStatusRecordForm
 
 
 class DoctorListView(ListView):
@@ -113,7 +113,7 @@ class UpdateRecord(UpdateView):
     с точки зрения гибкости последующей настройки
     """
     model = PatientRecord
-    template_name = 'record_update_form.html'
+    template_name = 'record_update_form_patient.html'
     form_class = RecordForm
     context_object_name = 'record'
     success_url = reverse_lazy('check_records')
@@ -124,3 +124,43 @@ class DeleteRecord(DeleteView):
     template_name = 'delete_popup.html'
     context_object_name = 'record'
     success_url = reverse_lazy('check_records')
+
+
+class DoctorRateView(ListView):
+    model = DoctorProfile
+    template_name = 'doctor_rate.html'
+    context_object_name = 'doctor_profiles'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.annotate(
+            like_count = Count('rating', filter=Q(rating__like=True)),
+            dislike_count = Count('rating', filter=Q(rating__dislike=True)),
+            rating_score = ExpressionWrapper(
+                F('like_count') - F('dislike_count'),
+                output_field=IntegerField()
+            )).order_by('-rating_score')
+        return queryset
+
+
+class DoctorRecordsView(ListView):
+    model = PatientRecord
+    template_name = 'doctor_check_records.html'
+    context_object_name = 'records'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = PatientRecord.objects.filter(doctor=self.request.user.doctor_profile
+                                                ).order_by('-appointment_date')
+        return queryset
+
+
+
+class UpdateRecordStatus(UpdateView):
+    model = PatientRecord
+    template_name = 'record_update_form.html'
+    form_class = SetStatusRecordForm
+    context_object_name = 'record'
+    success_url = reverse_lazy('patient_records')

@@ -1,4 +1,3 @@
-from django.contrib.auth.views import LogoutView
 from django.urls import path
 from . import views
 
@@ -10,4 +9,7 @@ urlpatterns = [
     path('my_records/', views.CheckRecords.as_view(), name='check_records'),
     path('update_rec/<int:pk>', views.UpdateRecord.as_view(), name='update_record'),
     path('delete_rec/<int:pk>', views.DeleteRecord.as_view(), name='delete_record'),
+    path('doctor_rate/', views.DoctorRateView.as_view(), name='doctor_rate'),
+    path('patient_records/', views.DoctorRecordsView.as_view(), name='patient_records'),
+    path('update_rec_doctor/<int:pk>', views.UpdateRecordStatus.as_view(), name='update_rec_doctor'),
 ]
