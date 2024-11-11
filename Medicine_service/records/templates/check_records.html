@@ -13,11 +13,18 @@
                 {% else %}
                 <img src="{% static 'default.jpg' %}" alt="avatar" class="rounded-circle me-3" style="width: 40px; height: 40px;">
                 {% endif %}
-                Вы записаны к <strong style="color: #007bff;">&thinsp;{{ record.doctor.name }} {{ record.doctor.second_name }}&thinsp;</strong>
-                в должности&thinsp;<strong style="color: #007bff;">{{ record.doctor.position }}&thinsp;</strong> с жалобами на
-                {{ record.description_patient|truncatechars:20 }}
+                <div>
+                    Вы записаны к <strong style="color: #007bff;">&thinsp;{{ record.doctor.name }} {{ record.doctor.second_name }}&thinsp;</strong>
+                    в должности&thinsp;<strong style="color: #007bff;">{{ record.doctor.position }}&thinsp;</strong> с жалобами на
+                    {{ record.description_patient|truncatechars:20 }}
+                </div>
             </div>
-            <span class="badge bg-primary rounded-pill">{{ record.appointment_date }}</span>
+            <!-- Блок действий и даты записи -->
+            <div class="d-flex align-items-center">
+                <span class="me-3 text-muted">{{ record.appointment_date }}</span>
+                <a href="{% url 'update_record' record.pk %}" class="badge bg-primary rounded-pill text-decoration-none me-2">Изменить</a>
+                <a href="{% url 'delete_record' record.pk %}" class="badge bg-primary rounded-pill text-decoration-none me-2">Удалить</a>
+            </div>
         </li>
        {% endfor %}
        {% else %}
