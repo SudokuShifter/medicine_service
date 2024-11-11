@@ -17,7 +17,9 @@
                 в должности&thinsp;<strong style="color: #007bff;">{{ record.doctor.position }}&thinsp;</strong> с жалобами на
                 {{ record.description_patient|truncatechars:20 }}
             </div>
-            <span class="badge bg-primary rounded-pill">{{ record.appointment_date }}</span>
+           <a href="{% url 'update_record' record.pk %}"><span class="badge bg-primary rounded-pill">Изменить</span></a>
+           <a href="{% url 'delete_record' record.pk %}"><span class="badge bg-primary rounded-pill">Удалить</span></a>
+            <class="badge bg-primary rounded-pill">{{ record.appointment_date }}</span>
         </li>
        {% endfor %}
        {% else %}

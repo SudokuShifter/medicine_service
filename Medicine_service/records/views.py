@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.views.generic import CreateView, ListView, View
-from django.views.generic.edit import BaseCreateView
+from django.views.generic.edit import UpdateView, DeleteView
 from django.db.models import Count, Q
 from django.urls import reverse_lazy
 
@@ -104,3 +104,23 @@ class CheckRecords(ListView):
         queryset = PatientRecord.objects.filter(patient=self.request.user.user_profile)
         queryset.order_by('appointment_date')
         return queryset
+
+
+class UpdateRecord(UpdateView):
+    """
+    Класс UpdateRecord наследуется от UpdateView. Служит для обновления информации внутри определённой записи.
+    Можно было бы совместить логику с Классом CreateRecord, но я посчитал, что так будет лаконичнее и правильнее
+    с точки зрения гибкости последующей настройки
+    """
+    model = PatientRecord
+    template_name = 'record_update_form.html'
+    form_class = RecordForm
+    context_object_name = 'record'
+    success_url = reverse_lazy('check_records')
+
+
+class DeleteRecord(DeleteView):
+    model = PatientRecord
+    template_name = 'delete_popup.html'
+    context_object_name = 'record'
+    success_url = reverse_lazy
