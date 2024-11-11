@@ -123,4 +123,4 @@ class DeleteRecord(DeleteView):
     model = PatientRecord
     template_name = 'delete_popup.html'
     context_object_name = 'record'
-    success_url = reverse_lazy
+    success_url = reverse_lazy('check_records')
