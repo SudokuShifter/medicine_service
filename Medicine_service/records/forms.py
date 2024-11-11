@@ -5,7 +5,7 @@ from .models import PatientRecord
 
 class RecordForm(forms.ModelForm):
     """
-    Форма для записи пациента к врачу. Наслудется от forms.ModelForm (базовая штука джанги)
+    Форма для записи пациента к врачу. Наследуется от forms.ModelForm (базовая штука джанги)
     Класс Meta внутри сделан для удобства.
     """
     class Meta:
@@ -14,3 +14,9 @@ class RecordForm(forms.ModelForm):
         widgets = {
             'appointment_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
+
+
+class SetStatusRecordForm(forms.ModelForm):
+    class Meta:
+        model = PatientRecord
+        fields = ['status', 'description']

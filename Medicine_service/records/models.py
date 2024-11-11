@@ -20,6 +20,12 @@ class PatientRecord(models.Model):
         related_name='patients_records'
     )
     """
+    CHOICES_STATUS = (
+        ('IN', 'В работе'),
+        ('CL', 'Закрыта'),
+        ('SC', 'Записан')
+    )
+
     patient = models.ForeignKey(
         'user_part.UserProfile',
         on_delete=models.CASCADE,
@@ -42,8 +48,13 @@ class PatientRecord(models.Model):
     )
     description = models.TextField(
         blank=True, null=True,
-        verbose_name='Заметки врача')
-
+        verbose_name='Заметки врача'
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=CHOICES_STATUS,
+        default=CHOICES_STATUS[0]
+    )
     class Meta:
         verbose_name = 'Запись пациента'
         verbose_name_plural = 'Записи пациентов'

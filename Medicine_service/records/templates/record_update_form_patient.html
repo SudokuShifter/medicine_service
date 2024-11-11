@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+<body class="text-center">
+<main class="form-signin w-100 m-auto mt-5 mb-5 py-5" style="max-width: 400px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <img class="mb-4" src="{% static 'icons/logo.svg' %}" alt="Logo" width="200" height="57">
+        <h1 class="h3 mb-3 fw-normal">Вы можете изменить запись</h1>
+        <!-- Обработка ошибок формы -->
+        {% if form.errors %}
+        <div class="alert alert-secondary" role="alert">
+            Проверьте правильность введённых данных
+        </div>
+        {% endif %}
+        <p><strong>Ваше имя:</strong> {{ record.patient}}</p>
+        <p><strong>Выбранный врач:</strong> {{ record.doctor }}</p>
+        <p><strong>Статус:</strong> {{ record.get_status_display }}</p>
+        <p><strong>Заметки врача:</strong>{% if record.desctioption %} {{ record.description }} {% else %} Тут пока пусто {% endif %}</p>
+        <!-- Поле для выбора даты приёма -->
+        {% if form.appointment_time.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ form.appointment_time.errors }}
+    </div>
+{% endif %}
+        <div class="form-floating mb-3">
+    <input type="datetime-local" class="form-control" id="id_appointment_date" name="appointment_date" placeholder="Выберите дату и время">
+    <label for="id_appointment_date">Дата и время приёма</label>
+</div>
+        <!-- Поле для описания состояния пациента -->
+        <div class="form-floating mb-3">
+            {{ form.description_patient|add_class:"form-control" }}
+            <label for="id_description_patient">Описание состояния</label>
+        </div>
+
+        <!-- Кнопка подтверждения -->
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Подтвердить</button>
+
+        <p class="mt-5 mb-3 text-muted">© 2024</p>
+    </form>
+</main>
+</body>
+{% endblock %}

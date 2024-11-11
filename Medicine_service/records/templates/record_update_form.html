@@ -7,29 +7,26 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <img class="mb-4" src="{% static 'icons/logo.svg' %}" alt="Logo" width="200" height="57">
-        <h1 class="h3 mb-3 fw-normal">Изменить запись</h1>
-        <!-- Обработка ошибок формы -->
-        {% if form.errors %}
-        <div class="alert alert-secondary" role="alert">
-            Проверьте правильность введённых данных
-        </div>
-        {% endif %}
-        <p><strong>Ваше имя:</strong> {{ record.patient.name }}</p>
+        <h1 class="h3 mb-3 fw-normal">Изменить статус записи</h1>
+        <p><strong>Имя пациента:</strong> {{ record.patient.name }}</p>
         <p><strong>Выбранный врач:</strong> {{ record.doctor.name }}</p>
-        <!-- Поле для выбора даты приёма -->
-        {% if form.appointment_time.errors %}
-    <div class="alert alert-danger" role="alert">
-        {{ form.appointment_time.errors }}
-    </div>
-{% endif %}
+        <p><strong>Жалобы на:</strong> {{ record.description_patient }}</p>
+        <p><strong>Дата приёма:</strong> {{ record.appointment_date }}</p>
+
+        <!-- Поле для смены статуса записи -->
         <div class="form-floating mb-3">
-    <input type="datetime-local" class="form-control" id="id_appointment_date" name="appointment_date" placeholder="Выберите дату и время">
-    <label for="id_appointment_date">Дата и время приёма</label>
-</div>
+            <select class="form-select" id="id_status" name="status" aria-label="Статус записи">
+                <option value="SC" {% if record.status == 'SC' %}selected{% endif %}>Закрыта</option>
+                <option value="IN" {% if record.status == 'IN' %}selected{% endif %}>В работе</option>
+                <option value="CL" {% if record.status == 'CL' %}selected{% endif %}>Записан</option>
+            </select>
+            <label for="id_status">Статус записи</label>
+        </div>
+
         <!-- Поле для описания состояния пациента -->
         <div class="form-floating mb-3">
-            {{ form.description_patient|add_class:"form-control" }}
-            <label for="id_description_patient">Описание состояния</label>
+            {{ form.description|add_class:"form-control" }}
+            <label for="id_description_patient">Ваши заметки</label>
         </div>
 
         <!-- Кнопка подтверждения -->
