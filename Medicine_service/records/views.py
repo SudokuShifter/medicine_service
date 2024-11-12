@@ -152,6 +152,10 @@ class DoctorRateView(ListView):
 
 
 class DoctorRecordsView(ListView):
+    """
+    Класс DoctorRecordsView наследуется от ListView. Служит для просмотра записей пациентов.
+    Переопределён метод get_queryset для отображения записей в правильном порядке.
+    """
     model = PatientRecord
     template_name = 'doctor_check_records.html'
     context_object_name = 'records'
@@ -166,6 +170,9 @@ class DoctorRecordsView(ListView):
 
 
 class UpdateRecordStatus(UpdateView):
+    """
+    UpdateRecordStatus наследуется от UpdateView. Служит для обновления информации в записи пациента.
+    """
     model = PatientRecord
     template_name = 'record_update_form.html'
     form_class = SetStatusRecordForm
