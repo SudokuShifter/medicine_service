@@ -120,6 +120,9 @@ class UpdateRecord(UpdateView):
 
 
 class DeleteRecord(DeleteView):
+    """
+    Класс DeleteRecord наследуется от DeleteView. Служит для удаления определённой записи.
+    """
     model = PatientRecord
     template_name = 'delete_popup.html'
     context_object_name = 'record'
@@ -127,6 +130,10 @@ class DeleteRecord(DeleteView):
 
 
 class DoctorRateView(ListView):
+    """
+    Класс DoctorRateView наследуется от ListView. Служит для просмотра рейтинга врачей.
+    Переопределён метод get_queryset для отображения докторов в правильном порядке (от б-го кол-ва лайков до меньшего)
+    """
     model = DoctorProfile
     template_name = 'doctor_rate.html'
     context_object_name = 'doctor_profiles'
@@ -145,6 +152,10 @@ class DoctorRateView(ListView):
 
 
 class DoctorRecordsView(ListView):
+    """
+    Класс DoctorRecordsView наследуется от ListView. Служит для просмотра записей пациентов.
+    Переопределён метод get_queryset для отображения записей в правильном порядке.
+    """
     model = PatientRecord
     template_name = 'doctor_check_records.html'
     context_object_name = 'records'
@@ -159,6 +170,9 @@ class DoctorRecordsView(ListView):
 
 
 class UpdateRecordStatus(UpdateView):
+    """
+    UpdateRecordStatus наследуется от UpdateView. Служит для обновления информации в записи пациента.
+    """
     model = PatientRecord
     template_name = 'record_update_form.html'
     form_class = SetStatusRecordForm

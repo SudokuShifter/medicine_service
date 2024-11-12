@@ -16,9 +16,9 @@
         <!-- Поле для смены статуса записи -->
         <div class="form-floating mb-3">
             <select class="form-select" id="id_status" name="status" aria-label="Статус записи">
-                <option value="SC" {% if record.status == 'SC' %}selected{% endif %}>Закрыта</option>
+                <option value="SC" {% if record.status == 'SC' %}selected{% endif %}>Записан</option>
                 <option value="IN" {% if record.status == 'IN' %}selected{% endif %}>В работе</option>
-                <option value="CL" {% if record.status == 'CL' %}selected{% endif %}>Записан</option>
+                <option value="CL" {% if record.status == 'CL' %}selected{% endif %}>Закрыта</option>
             </select>
             <label for="id_status">Статус записи</label>
         </div>
