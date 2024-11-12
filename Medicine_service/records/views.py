@@ -130,6 +130,10 @@ class DeleteRecord(DeleteView):
 
 
 class DoctorRateView(ListView):
+    """
+    Класс DoctorRateView наследуется от ListView. Служит для просмотра рейтинга врачей.
+    Переопределён метод get_queryset для отображения докторов в правильном порядке (от б-го кол-ва лайков до меньшего)
+    """
     model = DoctorProfile
     template_name = 'doctor_rate.html'
     context_object_name = 'doctor_profiles'
