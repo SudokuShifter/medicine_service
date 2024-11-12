@@ -120,6 +120,9 @@ class UpdateRecord(UpdateView):
 
 
 class DeleteRecord(DeleteView):
+    """
+    Класс DeleteRecord наследуется от DeleteView. Служит для удаления определённой записи.
+    """
     model = PatientRecord
     template_name = 'delete_popup.html'
     context_object_name = 'record'
