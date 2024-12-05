@@ -12,6 +12,13 @@ class Category(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return self.name
+
+
 
 class Question(models.Model):
     name = models.CharField(
@@ -28,6 +35,7 @@ class Question(models.Model):
         on_delete=models.CASCADE,
         related_name='questions'
     )
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'Вопрос пациента'

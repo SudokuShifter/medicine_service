@@ -12,9 +12,11 @@
 
         <!-- Обработка ошибок формы -->
         {% if form.errors %}
+        {% for key, value in form.errors.items %}
         <div class="alert alert-danger" role="alert">
-            Проверьте правильность введённых данных
+            {{ value }}
         </div>
+        {% endfor %}
         {% endif %}
         <div class="form-floating mb-3">
             {{ form.username|add_class:"form-control" }}
