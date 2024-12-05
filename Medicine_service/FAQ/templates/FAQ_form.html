@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">Добавить новый вопрос</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="POST" action="">
+                        {% csrf_token %}
+
+                        <!-- Поле для ввода имени вопроса -->
+                        <div class="form-group">
+                            <label for="id_name" class="font-weight-bold">Название вопроса</label>
+                            {{ form.name|add_class:"form-control" }}
+                            {% if form.name.errors %}
+                                <div class="text-danger">
+                                    {{ form.name.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Поле для ввода описания вопроса -->
+                        <div class="form-group">
+                            <label for="id_description" class="font-weight-bold">Описание вопроса</label>
+                            {{ form.description|add_class:"form-control" }}
+                            {% if form.description.errors %}
+                                <div class="text-danger">
+                                    {{ form.description.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Выпадающий список для выбора категории -->
+                        <div class="form-group">
+                            <label for="id_choose_field" class="font-weight-bold">Категория</label>
+                            {{ form.category|add_class:"form-control" }}
+                            {% if form.choose_field.errors %}
+                                <div class="text-danger">
+                                    {{ form.choose_field.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Кнопки отправки и отмены -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Сохранить
+                            </button>
+                            <a href="{% url 'faq_main' %}" class="btn btn-secondary ml-2">
+                                <i class="fas fa-times"></i> Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

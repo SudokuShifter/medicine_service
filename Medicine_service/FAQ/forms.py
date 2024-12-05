@@ -9,4 +9,9 @@ class AddQuestionForm(forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = '__all__'
+        fields = ['name', 'description', 'category']
+
+    def save(self, commit=True):
+        question = super().save(commit=False)
+        question.category = self.cleaned_data['category']
+        return question

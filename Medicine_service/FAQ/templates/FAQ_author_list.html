@@ -11,10 +11,10 @@
             <a href="{% url 'add_question' %}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Задать вопрос
             </a>
-            <a href="{% url 'my_questions' %}" class="btn">
-                <i class="fas"></i> Мои вопросы
-            </a>
             {% endif %}
+            <a href="{% url 'faq_main' %}" class="btn">
+                <i class="fas"></i> Все вопросы
+            </a>
         </div>
     </div>
 
@@ -39,17 +39,17 @@
                         {% endif %}
 
                         <!-- Действия: изменить и удалить -->
-                        {% if user.is_staff %}
+
                         <div class="d-flex justify-content-end mt-4">
                             <a href="" class="btn btn-outline-primary btn-sm mr-2">
-                                <i class="fas fa-pencil-alt"></i> Ответить
+                                <i class="fas fa-pencil-alt"></i> Изменить
                             </a>
-                            {% else %}
-                        <div class="d-flex justify-content-end mt-4">
-                            <a href="" class="btn btn-outline-primary btn-sm mr-2">
-                                <i class="fas fa-pencil-alt"></i> Посмотреть
-                            </a>
-                        {% endif %}
+                            <form action="" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Вы уверены, что хотите удалить этот вопрос?');">
+                                    <i class="fas fa-trash-alt"></i> Удалить
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
