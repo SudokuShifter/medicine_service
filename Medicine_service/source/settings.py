@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'user_part.apps.UserPartConfig',
     'records.apps.RecordsConfig',
     'FAQ.apps.FaqConfig',
+    'messenger.apps.MessengerConfig',
 ]
 
 MIDDLEWARE = [
