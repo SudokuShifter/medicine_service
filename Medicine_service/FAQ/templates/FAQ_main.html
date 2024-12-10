@@ -41,12 +41,12 @@
                         <!-- Действия: изменить и удалить -->
                         {% if user.is_staff %}
                         <div class="d-flex justify-content-end mt-4">
-                            <a href="" class="btn btn-outline-primary btn-sm mr-2">
+                            <a href="{% url 'answer_question' question.pk %}" class="btn btn-outline-primary btn-sm mr-2">
                                 <i class="fas fa-pencil-alt"></i> Ответить
                             </a>
                             {% else %}
                         <div class="d-flex justify-content-end mt-4">
-                            <a href="" class="btn btn-outline-primary btn-sm mr-2">
+                            <a href="{% url 'detail_question' question.pk %}" class="btn btn-outline-primary btn-sm mr-2">
                                 <i class="fas fa-pencil-alt"></i> Посмотреть
                             </a>
                         {% endif %}

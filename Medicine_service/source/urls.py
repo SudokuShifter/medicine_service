@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.urls import path, include
 from . import settings
+import debug_toolbar
 
 
 urlpatterns = [
@@ -25,6 +26,7 @@ urlpatterns = [
     path('', include('user_part.urls')),
     path('records/', include('records.urls')),
     path('FAQ/', include('FAQ.urls')),
+    path('__debug__/', include(debug_toolbar.urls))
 ]
 
 if settings.DEBUG:
