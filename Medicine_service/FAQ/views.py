@@ -1,11 +1,8 @@
-from lib2to3.fixes.fix_input import context
-from xml.dom import NotFoundErr
-
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView
 
 from .models import Question, Answer
 from .forms import AddQuestionForm, AnswerForm
@@ -80,3 +77,9 @@ class AnswerQuestion(CreateView):
         context = super().get_context_data(**kwargs)
         context['question'] = Question.objects.get(pk=self.kwargs['pk'])
         return context
+
+
+class DeleteQuestion(DeleteView):
+    model = Question
+    success_url = reverse_lazy('faq_main')
+    template_name = 'FAQ_delete_popup.html'
