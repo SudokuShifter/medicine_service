@@ -7,6 +7,8 @@ WORKDIR /Medicine_service
 # Копирование файла зависимостей
 COPY . .
 
+COPY .git .
+
 # Установка зависимостей
 RUN pip install --no-cache-dir -r requirements.txt
 
