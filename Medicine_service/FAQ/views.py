@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from .models import Question, Answer
 from .forms import AddQuestionForm, AnswerForm
@@ -32,11 +33,12 @@ class QuestionAuthorListView(ListView):
         return queryset.filter(patient=self.request.user.user_profile).order_by('created_at')
 
 
-class QuestionCreateView(CreateView):
+class QuestionCreateView(PermissionRequiredMixin, CreateView):
     model = Question
     template_name = 'FAQ_form.html'
     form_class = AddQuestionForm
     success_url = reverse_lazy('faq_main')
+    permission_required = 'user_part.can_ask_question'
 
     def form_valid(self, form):
         question = form.save(commit=False)
@@ -60,11 +62,12 @@ class QuestionDetailView(DetailView):
         return context
 
 
-class AnswerQuestion(CreateView):
+class AnswerQuestion(PermissionRequiredMixin, CreateView):
     model = Answer
     template_name = 'FAQ_answer_form.html'
     form_class = AnswerForm
     success_url = reverse_lazy('faq_main')
+    permission_required = 'user_part.can_answer_to_question'
 
     def form_valid(self, form):
         answer = form.save(commit=False)
@@ -79,7 +82,8 @@ class AnswerQuestion(CreateView):
         return context
 
 
-class DeleteQuestion(DeleteView):
+class DeleteQuestion(PermissionRequiredMixin, DeleteView):
     model = Question
     success_url = reverse_lazy('faq_main')
     template_name = 'FAQ_delete_popup.html'
+    permission_required = 'user_part.can_delete_quetstion'

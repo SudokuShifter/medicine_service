@@ -65,7 +65,19 @@ class UserProfile(models.Model):
         verbose_name = 'Пациент'
         verbose_name_plural = 'Пациенты'
         ordering = ['created']
-
+        permissions = [
+            ('can_view_profile', 'Может смотреть свой профиль'),
+            ('can_edit_profile', 'Может редактировать свой профиль'),
+            ('can_edit_record', 'Может редактировать запись к врачу'),
+            ('can_ask_question', 'Может задавать вопросы'),
+            ('can_delete_quetstion', 'Может удалять вопросы'),
+            ('can_view_doctor_list', 'Может смотреть список докторов'),
+            ('can_change_rating_doctors', 'Может менять рейтинг докторов'),
+            ('can_create_record', 'Может создавать записи к врачу'),
+            ('can_view_records', 'Может смотреть записи'),
+            ('can_update_records', 'Может менять записи'),
+            ('can_delete_records', 'Может удалять записи'),
+        ]
 
 class DoctorProfile(models.Model):
     """
@@ -147,6 +159,14 @@ class DoctorProfile(models.Model):
     class Meta:
         verbose_name = 'Доктор'
         verbose_name_plural = 'Доктора'
+        permissions = [
+            ('can_view_profile', 'Может смотреть свой профиль'),
+            ('can_edit_profile', 'Может редактировать свой профиль'),
+            ('can_edit_record_status', 'Может редактировать статус записи'),
+            ('can_answer_to_question', 'Может отвечать на вопросы пользователя'),
+            ('can_view_doctors_rating', 'Может смотреть рейтинг докторов'),
+            ('can_view_records_patient', 'Может смотреть записи'),
+        ]
 
 
 class Address(models.Model):

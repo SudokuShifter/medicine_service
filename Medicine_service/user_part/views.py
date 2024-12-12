@@ -4,6 +4,7 @@ from django.contrib.auth.views import LoginView
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from .forms import CustomCreateUserForm, CustomUpdateUserForm, CustomUpdateUserAddressForm, CustomUpdateDoctorForm
 from .models import UserProfile, Address, DoctorProfile
@@ -85,7 +86,7 @@ class UserProfileCreateView(UpdateView):
         return reverse_lazy('lk', kwargs={'slug': user_profile.slug})
 
 
-class UserAddressCreateView(UpdateView):
+class UserAddressCreateView(PermissionRequiredMixin, UpdateView):
     """
     Класс UserAddressCreateView наследуется от CreateView.
     Отвечает за 3й этап регистрации пользователя (добавление данных об адресе)
@@ -93,6 +94,7 @@ class UserAddressCreateView(UpdateView):
     model = Address
     template_name = 'user_part/edit_address.html'
     form_class = CustomUpdateUserAddressForm
+    permission_required = 'user_part.can_edit_user_profile'
 
     def check_model(self):
         user = self.request.user
@@ -119,13 +121,14 @@ class UserAddressCreateView(UpdateView):
         return reverse_lazy('lk', kwargs={'slug': user_profile.slug})
 
 
-class UserLk(DetailView):
+class UserLk(PermissionRequiredMixin, DetailView):
     """
     Класс UserLk наследуется от DetailView.
     Через метод get_object мы получаем объект модели UserProfile или DoctorProfile
     и используем данные в get_context_data.
     """
     template_name = 'user_part/lk.html'
+    permission_required = 'user_part.can_view_profile'
 
     def get_object(self, queryset=None):
         user = self.request.user
