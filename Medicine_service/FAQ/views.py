@@ -3,7 +3,6 @@ from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView
-from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from .models import Question, Answer
 from .forms import AddQuestionForm, AnswerForm
@@ -39,7 +38,6 @@ class QuestionCreateView(CreateView):
     form_class = AddQuestionForm
     success_url = reverse_lazy('faq_main')
 
-
     def form_valid(self, form):
         question = form.save(commit=False)
         question.patient = self.request.user.user_profile
@@ -67,7 +65,6 @@ class AnswerQuestion(CreateView):
     template_name = 'FAQ_answer_form.html'
     form_class = AnswerForm
     success_url = reverse_lazy('faq_main')
-
 
     def form_valid(self, form):
         answer = form.save(commit=False)
