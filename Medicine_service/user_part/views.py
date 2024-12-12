@@ -96,6 +96,7 @@ class UserAddressCreateView(PermissionRequiredMixin, UpdateView):
     form_class = CustomUpdateUserAddressForm
     permission_required = 'user_part.can_edit_user_profile'
 
+
     def check_model(self):
         user = self.request.user
         return user.doctor_profile if user.is_staff else user.user_profile

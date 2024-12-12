@@ -3,14 +3,13 @@ from django.views.generic import CreateView, ListView, View
 from django.views.generic.edit import UpdateView, DeleteView
 from django.db.models import Count, Q, ExpressionWrapper, F, IntegerField
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from .models import PatientDoctorRelation, PatientRecord
 from user_part.models import DoctorProfile, Position
 from .forms import RecordForm, SetStatusRecordForm
 
 
-class DoctorListView(PermissionRequiredMixin, ListView):
+class DoctorListView(ListView):
     """
     Класс DoctorListView наследуется от ListView. Определён с целью отображения списка доступных докторов,
     которые могут принять пациента по записи.
@@ -21,7 +20,7 @@ class DoctorListView(PermissionRequiredMixin, ListView):
     template_name = 'doctors.html'
     context_object_name = 'doctors'
     paginate_by = 10
-    permission_required = 'user_part.can_view_doctor_list'
+
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -49,14 +48,14 @@ class DoctorListView(PermissionRequiredMixin, ListView):
         return context
 
 
-class RateDoctorView(PermissionRequiredMixin, View):
+class RateDoctorView(View):
     """
     Класс RateDoctorView наследуется от базового класса View. В классе определён метод post,
     для передачи оценки (лайк/дизлайк) в модель PatientDoctorRelation со связью Многие Ко Многим.
     Через шаблон передаётся action, pk врача и pk пациента и вносится в базу данных.
     При этом комбинация врача и пациента должна быть уникальной, чтобы пациент не смог поставить более 1й оценки врачу
     """
-    permission_required = 'user_part.can_change_rating_doctors'
+
 
     def post(self, request, pk):
         doctor = DoctorProfile.objects.get(pk=pk)
@@ -69,7 +68,7 @@ class RateDoctorView(PermissionRequiredMixin, View):
         return redirect('doc_list')
 
 
-class CreateRecord(PermissionRequiredMixin, CreateView):
+class CreateRecord(CreateView):
     """
     Класс CreateRecord наследуется от CreateView. В классе реализован достаточно стандартный интерфейс
     для сбора данных из формы с занесением в бд. Класс работает с моделью записи пациента - PatientRecord
@@ -79,7 +78,7 @@ class CreateRecord(PermissionRequiredMixin, CreateView):
     form_class = RecordForm
     template_name = 'record_form.html'
     success_url = reverse_lazy('check_records')
-    permission_required = 'user_part.can_create_record'
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -94,7 +93,7 @@ class CreateRecord(PermissionRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class CheckRecords(PermissionRequiredMixin, ListView):
+class CheckRecords(ListView):
     """
     Класс CheckRecords наследуется от ListView. Служит для отображения списка записей.
     Переопределён метод get_queryset для прокидывания записей пользователя в темплейт.
@@ -103,7 +102,6 @@ class CheckRecords(PermissionRequiredMixin, ListView):
     model = PatientRecord
     template_name = 'check_records.html'
     context_object_name = 'records'
-    permission_required = ['user_part.can_create_record', 'user_part.can_view_records_patient']
 
 
     def get_queryset(self):
@@ -113,7 +111,7 @@ class CheckRecords(PermissionRequiredMixin, ListView):
         return queryset
 
 
-class UpdateRecord(PermissionRequiredMixin, UpdateView):
+class UpdateRecord(UpdateView):
     """
     Класс UpdateRecord наследуется от UpdateView. Служит для обновления информации внутри определённой записи.
     Можно было бы совместить логику с Классом CreateRecord, но я посчитал, что так будет лаконичнее и правильнее
@@ -124,10 +122,9 @@ class UpdateRecord(PermissionRequiredMixin, UpdateView):
     form_class = RecordForm
     context_object_name = 'record'
     success_url = reverse_lazy('check_records')
-    permission_required = 'user_part.can_update_records'
 
 
-class DeleteRecord(PermissionRequiredMixin, DeleteView):
+class DeleteRecord(DeleteView):
     """
     Класс DeleteRecord наследуется от DeleteView. Служит для удаления определённой записи.
     """
@@ -135,7 +132,6 @@ class DeleteRecord(PermissionRequiredMixin, DeleteView):
     template_name = 'delete_popup.html'
     context_object_name = 'record'
     success_url = reverse_lazy('check_records')
-    permission_required = 'user_part.can_delete_records'
 
 
 class DoctorRateView(ListView):
@@ -160,7 +156,7 @@ class DoctorRateView(ListView):
         return queryset
 
 
-class DoctorRecordsView(PermissionRequiredMixin, ListView):
+class DoctorRecordsView(ListView):
     """
     Класс DoctorRecordsView наследуется от ListView. Служит для просмотра записей пациентов.
     Переопределён метод get_queryset для отображения записей в правильном порядке.
@@ -169,7 +165,6 @@ class DoctorRecordsView(PermissionRequiredMixin, ListView):
     template_name = 'doctor_check_records.html'
     context_object_name = 'records'
     paginate_by = 10
-    permission_required = 'user_part.can_view_records_patient'
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -179,7 +174,7 @@ class DoctorRecordsView(PermissionRequiredMixin, ListView):
 
 
 
-class UpdateRecordStatus(PermissionRequiredMixin, UpdateView):
+class UpdateRecordStatus(UpdateView):
     """
     UpdateRecordStatus наследуется от UpdateView. Служит для обновления информации в записи пациента.
     """
@@ -188,4 +183,3 @@ class UpdateRecordStatus(PermissionRequiredMixin, UpdateView):
     form_class = SetStatusRecordForm
     context_object_name = 'record'
     success_url = reverse_lazy('patient_records')
-    permission_required = 'user_part.can_edit_record_status'
