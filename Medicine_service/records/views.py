@@ -21,6 +21,7 @@ class DoctorListView(ListView):
     context_object_name = 'doctors'
     paginate_by = 10
 
+
     def get_queryset(self):
         queryset = super().get_queryset()
         position = self.request.GET.get('position')
@@ -54,6 +55,8 @@ class RateDoctorView(View):
     Через шаблон передаётся action, pk врача и pk пациента и вносится в базу данных.
     При этом комбинация врача и пациента должна быть уникальной, чтобы пациент не смог поставить более 1й оценки врачу
     """
+
+
     def post(self, request, pk):
         doctor = DoctorProfile.objects.get(pk=pk)
         patient = self.request.user.user_profile
@@ -75,6 +78,7 @@ class CreateRecord(CreateView):
     form_class = RecordForm
     template_name = 'record_form.html'
     success_url = reverse_lazy('check_records')
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -98,6 +102,7 @@ class CheckRecords(ListView):
     model = PatientRecord
     template_name = 'check_records.html'
     context_object_name = 'records'
+
 
     def get_queryset(self):
         queryset = super().get_queryset()

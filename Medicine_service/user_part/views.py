@@ -4,6 +4,7 @@ from django.contrib.auth.views import LoginView
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from .forms import CustomCreateUserForm, CustomUpdateUserForm, CustomUpdateUserAddressForm, CustomUpdateDoctorForm
 from .models import UserProfile, Address, DoctorProfile
@@ -93,6 +94,7 @@ class UserAddressCreateView(UpdateView):
     model = Address
     template_name = 'user_part/edit_address.html'
     form_class = CustomUpdateUserAddressForm
+
 
     def check_model(self):
         user = self.request.user

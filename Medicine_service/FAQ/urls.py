@@ -8,4 +8,5 @@ urlpatterns = [
     path('my_questions/', views.QuestionAuthorListView.as_view(), name='my_questions'),
     path('question/<int:pk>/', views.QuestionDetailView.as_view(), name='detail_question'),
     path('question/<int:pk>/answer/', views.AnswerQuestion.as_view(), name='answer_question'),
+    path('question/<int:pk>/delete/', views.DeleteQuestion.as_view(), name='delete_question'),
 ]

@@ -39,17 +39,10 @@
                         {% endif %}
 
                         <!-- Действия: изменить и удалить -->
+                        <a href="{% url 'delete_question' question.pk %}" class="btn btn-secondary ml-2">
+    <i class="bi bi-bucket"></i> Удалить
+</a>
 
-                        <div class="d-flex justify-content-end mt-4">
-                            <a href="" class="btn btn-outline-primary btn-sm mr-2">
-                                <i class="fas fa-pencil-alt"></i> Изменить
-                            </a>
-                            <form action="" method="POST" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Вы уверены, что хотите удалить этот вопрос?');">
-                                    <i class="fas fa-trash-alt"></i> Удалить
-                                </button>
-                            </form>
                         </div>
                     </div>
                 </div>
