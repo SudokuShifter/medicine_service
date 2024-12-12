@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col text-right">
+            <!-- Кнопка для добавления нового вопроса -->
+            {% if not user.is_staff %}
+            <a href="{% url 'add_question' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Задать вопрос
+            </a>
+            <a href="{% url 'my_questions' %}" class="btn">
+                <i class="fas"></i> Мои вопросы
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Карточки с вопросами -->
+        {% if questions %}
+            {% for question in questions %}
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <!-- Заголовок вопроса -->
+                        <h5 class="card-title text-primary">{{ question.name }}</h5>
+                        <p class="card-text text-muted">{{ question.description|truncatechars:150 }}</p>
+
+                        <!-- Ответ -->
+                        {% if question.answer %}
+                            <div class="alert alert-light mt-3">
+                                <strong>Ответ:</strong> {{ question.answer.answer|truncatechars:150 }}
+                            </div>
+                        {% else %}
+                            <p class="text-muted mt-3"><em>Ответ отсутствует</em></p>
+                        {% endif %}
+
+                        <!-- Действия: изменить и удалить -->
+                        {% if user.is_staff %}
+                        <div class="d-flex justify-content-end mt-4">
+                            <a href="{% url 'answer_question' question.pk %}" class="btn btn-outline-primary btn-sm mr-2">
+                                <i class="fas fa-pencil-alt"></i> Ответить
+                            </a>
+                            {% else %}
+                        <div class="d-flex justify-content-end mt-4">
+                            <a href="{% url 'detail_question' question.pk %}" class="btn btn-outline-primary btn-sm mr-2">
+                                <i class="fas fa-pencil-alt"></i> Посмотреть
+                            </a>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <!-- Если вопросов нет -->
+            <div class="col-12 text-center mt-5">
+                <p class="text-muted">Пока что вопросов нет.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+    <!-- Пагинация -->
+    <div class="d-flex justify-content-center mt-4">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+<body class="text-center">
+<main class="form-signin w-100 m-auto mt-5 mb-5 py-5" style="max-width: 400px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <img class="mb-4" src="{% static 'icons/logo.svg' %}" alt="Logo" width="200" height="57">
+        <h1 class="h3 mb-3 fw-normal">Изменить статус записи</h1>
+        <p><strong>Имя пациента:</strong> {{ record.patient.name }}</p>
+        <p><strong>Выбранный врач:</strong> {{ record.doctor.name }}</p>
+        <p><strong>Жалобы на:</strong> {{ record.description_patient }}</p>
+        <p><strong>Дата приёма:</strong> {{ record.appointment_date }}</p>
+
+        <!-- Поле для смены статуса записи -->
+        <div class="form-floating mb-3">
+            <select class="form-select" id="id_status" name="status" aria-label="Статус записи">
+                <option value="SC" {% if record.status == 'SC' %}selected{% endif %}>Записан</option>
+                <option value="IN" {% if record.status == 'IN' %}selected{% endif %}>В работе</option>
+                <option value="CL" {% if record.status == 'CL' %}selected{% endif %}>Закрыта</option>
+            </select>
+            <label for="id_status">Статус записи</label>
+        </div>
+
+        <!-- Поле для описания состояния пациента -->
+        <div class="form-floating mb-3">
+            {{ form.description|add_class:"form-control" }}
+            <label for="id_description_patient">Ваши заметки</label>
+        </div>
+
+        <!-- Кнопка подтверждения -->
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Подтвердить</button>
+
+        <p class="mt-5 mb-3 text-muted">© 2024</p>
+    </form>
+</main>
+</body>
+{% endblock %}

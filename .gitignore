@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+.pytest_cache
 
 # C extensions
 *.so
@@ -93,10 +94,11 @@ djvenv
 .env/
 .venv
 .venv/
+venv
 ENV/
 env.bak/
 venv.bak/
-
+config/
 # Editor directories and files
 .vscode/
 .idea/
@@ -133,3 +135,6 @@ __pypackages__/
 
 # pyright
 pyrightconfig.json
+
+# env files
+.src

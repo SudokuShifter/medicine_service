@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+
+<body class="text-center">
+<main class="form-signin w-100 m-auto mt-5 mb-5 py-5" style="max-width: 400px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <img class="mb-4" src="{% static 'icons/logo.svg' %}" alt="" width="200" height="57">
+        <h1 class="h3 mb-3 fw-normal">Заполнить данные</h1>
+
+        <!-- Обработка ошибок формы -->
+        {% if form.errors %}
+       {% for key, value in form.errors.items %}
+        <div class="alert alert-danger" role="alert">
+            {{ value }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <div class="form-floating mb-3">
+            {{ form.name|add_class:"form-control" }}
+            <label for="id_name">Имя</label>
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.second_name|add_class:"form-control" }}
+            <label for="id_second_name">Фамилия</label>
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.middle_name|add_class:"form-control" }}
+            <label for="id_middle_name">Отчество</label>
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.birthday|add_class:"form-control" }}
+            <label for="birthdate">Дата рождения</label>
+        </div>
+        {% if user.is_staff %}
+        <div class="form-floating mb-3">
+            <!-- Выводим ChoiceField с красивым стилем -->
+            {{ form.position|add_class:"form-select" }}
+            <label for="{{ form.position.id_for_label }}">Должность</label>
+        </div>
+        {% endif %}
+        <div class="mb-3">
+            {{ form.photo|add_class:"form-control-file" }}
+            <label for="{{ form.photo.id_for_label }}">Ваша фотография</label>
+        </div>
+
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Сохранить</button>
+        <p class="mt-5 mb-3 text-muted">© 2024</p>
+    </form>
+</main>
+</body>
+{% endblock %}
