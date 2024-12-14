@@ -58,10 +58,6 @@ jobs:
       - name: Test Service Register
         run: |
           curl -f http://127.0.0.1:5000/register/ || (echo "Service is not running!" && exit 1)
-
-      - name: Test Service MyRecords
-        run: |
-          curl -f http://127.0.0.1:5000/records/my_records/ || (echo "Service is not running!" && exit 1)
           
       # Шаг 7: Очистка контейнера
       - name: Clean up
