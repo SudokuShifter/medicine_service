@@ -21,7 +21,7 @@ jobs:
 
       # Шаг 3: Сборка Docker-контейнера приложения
       - name: Build Docker container
-        run: docker build -t medicine_service ./apps/medicine_service
+        run: docker build -t medicine_service ./medicine_service
 
       # Шаг 4: Запуск Docker-контейнера с миграциями и сервером
       - name: Run Docker container
