@@ -38,7 +38,31 @@ jobs:
       - name: Test Service Endpoint
         run: |
           curl -f http://127.0.0.1:5000 || (echo "Service is not running!" && exit 1)
+          
+      - name: Test Service Records
+        run: |
+          curl -f http://127.0.0.1:5000/records/ || (echo "Service is not running!" && exit 1)
+          
+      - name: Test Service Login 
+        run: |
+          curl -f http://127.0.0.1:5000/login/ || (echo "Service is not running!" && exit 1)
+          
+      - name: Test Service FAQ
+        run: |
+          curl -f http://127.0.0.1:5000/FAQ/ || (echo "Service is not running!" && exit 1)
+          
+      - name: Test Service AddQuestion
+        run: |
+          curl -f http://127.0.0.1:5000/FAQ/add_question/ || (echo "Service is not running!" && exit 1)
+          
+      - name: Test Service Register
+        run: |
+          curl -f http://127.0.0.1:5000/FAQ/register/ || (echo "Service is not running!" && exit 1)
 
+      - name: Test Service MyRecords
+        run: |
+          curl -f http://127.0.0.1:5000/records/my_records/ || (echo "Service is not running!" && exit 1)
+          
       # Шаг 7: Очистка контейнера
       - name: Clean up
         run: |
