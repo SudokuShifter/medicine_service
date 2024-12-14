@@ -7,31 +7,36 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
 
     steps:
-    
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
-      
-    - name: Build Docker container
-      run: docker build -t medicine_service ./apps/medicine_service
-      
-    - name: run Docker container
-      run: docker run -d --name medicine_service_test -p 5000:5000 medicine_service \
+      # Шаг 1: Клонировать репозиторий
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Шаг 2: Сборка Docker-образа
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+
+      # Шаг 3: Сборка Docker-контейнера приложения
+      - name: Build Docker container
+        run: docker build -t medicine_service ./apps/medicine_service
+
+      # Шаг 4: Запуск Docker-контейнера с миграциями и сервером
+      - name: Run Docker container
+        run: |
+          docker run -d --name medicine_service_test -p 5000:5000 medicine_service \
             sh -c "python ./Medicine_service/manage.py migrate && python ./Medicine_service/manage.py runserver 0.0.0.0:5000"
           sleep 10
-          
-    - name: Test Service Endpoint
-        run:| 
-        curl -f http://127.0.0.1:5000 || (echo "Service is not running!" && exit 1)
-        
-    - name: Clean up
-        run:|
+
+      # Шаг 5: Проверка доступности сервиса
+      - name: Test Service Endpoint
+        run: |
+          curl -f http://127.0.0.1:5000 || (echo "Service is not running!" && exit 1)
+
+      # Шаг 6: Очистка контейнера
+      - name: Clean up
+        run: |
           docker stop medicine_service_test
           docker rm medicine_service_test
