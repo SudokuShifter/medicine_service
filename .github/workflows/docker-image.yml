@@ -1,0 +1,35 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      
+    - name: Build Docker container
+      run: docker build -t medicine_service ./apps/medicine_service
+      
+    - name: run Docker container
+      run: docker run -d --name medicine_service_test -p 5000:5000 medicine_service \
+            sh -c "python ./Medicine_service/manage.py migrate && python ./Medicine_service/manage.py runserver 0.0.0.0:5000"
+          sleep 10
+          
+    - name: Test Service Endpoint
+        run:| 
+        curl -f http://127.0.0.1:5000 || (echo "Service is not running!" && exit 1)
+        
+    - name: Clean up
+        run:|
+          docker stop medicine_service_test
+          docker rm medicine_service_test
