@@ -65,7 +65,11 @@
                                     {% endif %}
                                 </div>
                                 <div class="candidate-list-details">
-                                    <h5 class="mb-1"><a href="#">{{ doc.name }} {{ doc.second_name }}</a></h5>
+                                    {% if user.is_authenticated %}
+                                    <h5 class="mb-1"><a href="{% url 'record_doc' doc.pk %}">{{ doc.name }} {{ doc.second_name }}</a></h5>
+                                    {% else %}
+                                    <h5 class="mb-1"><a href="{% url 'login' %}">{{ doc.name }} {{ doc.second_name }}</a></h5>
+                                    {% endif %}
                                     <small><i class="fas fa-envelope pr-1"></i>{{ doc.user.email }}</small><br>
                                     <small><i class="fas fa-map-marker-alt pr-1"></i>{{ doc.address }}</small>
                                 </div>
@@ -75,11 +79,7 @@
                             </td>
                             <td class="text-center">
                                 <ul class="list-inline mb-0">
-                                    <li class="list-inline-item">
-                                        <a href="#" class="text-primary" data-toggle="tooltip" title="View">
-                                            <i class="far fa-eye"></i>
-                                        </a>
-                                    </li>
+{% if user.is_authenticated %}
                                     <li class="list-inline-item">
                                         <!-- Форма для лайка -->
                                         <a href="{% url 'record_doc' doc.pk %}" class="text-primary" data-toggle="tooltip" title="Запись">
@@ -87,6 +87,7 @@
                                                     <i class="fas fa-pencil-alt"></i>
                                         </a>
                                     </li>
+
                                    <li class="list-inline-item">
                                         <!-- Форма для лайка -->
                                         <form method="POST" action="{% url 'rate_doc' doc.pk %}" class="d-inline">
@@ -112,6 +113,7 @@
                                 </ul>
                             </td>
                         </tr>
+                        {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>
