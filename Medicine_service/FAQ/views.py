@@ -33,12 +33,12 @@ class QuestionAuthorListView(ListView):
         return queryset.filter(patient=self.request.user.user_profile).order_by('created_at')
 
 
-class QuestionCreateView(PermissionRequiredMixin, CreateView):
+class QuestionCreateView(CreateView):
     model = Question
     template_name = 'FAQ_form.html'
     form_class = AddQuestionForm
     success_url = reverse_lazy('faq_main')
-    permission_required = 'user_part.can_ask_question'
+
 
     def form_valid(self, form):
         question = form.save(commit=False)
@@ -62,12 +62,12 @@ class QuestionDetailView(DetailView):
         return context
 
 
-class AnswerQuestion(PermissionRequiredMixin, CreateView):
+class AnswerQuestion(CreateView):
     model = Answer
     template_name = 'FAQ_answer_form.html'
     form_class = AnswerForm
     success_url = reverse_lazy('faq_main')
-    permission_required = 'user_part.can_answer_to_question'
+
 
     def form_valid(self, form):
         answer = form.save(commit=False)
@@ -82,8 +82,7 @@ class AnswerQuestion(PermissionRequiredMixin, CreateView):
         return context
 
 
-class DeleteQuestion(PermissionRequiredMixin, DeleteView):
+class DeleteQuestion(DeleteView):
     model = Question
     success_url = reverse_lazy('faq_main')
     template_name = 'FAQ_delete_popup.html'
-    permission_required = 'user_part.can_delete_quetstion'
