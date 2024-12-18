@@ -22,7 +22,7 @@ class Command(BaseCommand):
                                     description='Терапевт — это врач широкого профиля, '
                                                 'имеющий высшее медицинское образование и ординатуру '
                                                 'по специальности «Терапия».')
-            Position.objects.crate(title='Стоматолог',
+            Position.objects.create(title='Стоматолог',
                                    description='Стоматолог, также известный как хирург-стоматолог, '
                                                'является медицинским работником, специализирующимся на стоматологии, '
                                                'отрасли медицины, специализирующейся на зубах, деснах и полости рта. '
@@ -32,5 +32,7 @@ class Command(BaseCommand):
             Position.objects.create(title='ЛОР',
                                     description='ЛОР (оториноларинголог) — врач, '
                                                 'который занимается лечением заболеваний уха, горла и носа. 1')
-            self.stdout.write('Success fill data positions')
-        self.stdout.write('End work')
+            self.stdout.write(self.style.SUCCESS('Успешно заполнены данные позиций.'))
+        else:
+            self.stdout.write(self.style.WARNING('Позиции уже существуют. Изменения не внесены.'))
+        self.stdout.write(self.style.SUCCESS('Работа команды завершена.'))
