@@ -39,7 +39,6 @@ class QuestionCreateView(CreateView):
     form_class = AddQuestionForm
     success_url = reverse_lazy('faq_main')
 
-
     def form_valid(self, form):
         question = form.save(commit=False)
         question.patient = self.request.user.user_profile
