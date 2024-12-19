@@ -48,6 +48,7 @@ jobs:
           docker exec medicine_service_test bash -c "
             python ./Medicine_service/manage.py test
             "
+          sleep 20
 
       
       # Шаг 8: Проверка доступности сервиса
