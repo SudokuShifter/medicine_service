@@ -1,1 +1,14 @@
-﻿ascii==3.6asgiref==3.8.1coverage==7.6.9Django==3.2.2django-debug-toolbar==3.2.4django-phonenumber-field==8.0.0django-widget-tweaks==1.5.0phonenumbers==8.13.43pillow==10.4.0python-dotenv==1.0.1pytz==2024.1sqlparse==0.5.1tzdata==2024.1urllib3==2.2.2
+ascii==3.6
+asgiref==3.8.1
+coverage==7.6.9
+Django==3.2.2
+django-debug-toolbar==3.2.4
+django-phonenumber-field==8.0.0
+django-widget-tweaks==1.5.0
+phonenumbers==8.13.43
+pillow==10.4.0
+python-dotenv==1.0.1
+pytz==2024.1
+sqlparse==0.5.1
+tzdata==2024.1
+urllib3==2.2.2

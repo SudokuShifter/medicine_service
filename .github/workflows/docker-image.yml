@@ -34,7 +34,23 @@ jobs:
             sh -c "python ./Medicine_service/manage.py migrate && python ./Medicine_service/manage.py runserver 0.0.0.0:5000"
           sleep 10
 
-      # Шаг 6: Проверка доступности сервиса
+     # Шаг 6: Наполнение данными
+      - name: Fill data
+        run: |
+          docker exec medicine_service_test bash -c "
+            python ./Medicine_service/manage.py fill_positions &&
+            python ./Medicine_service/manage.py fill_categories
+            "
+
+    # Шаг 7: Юнит тесты
+      - name: Unit test
+        run: |
+          docker exec medicine_service_test bash -c "
+            cd Medicine_service && python manage.py test
+            "
+
+      
+      # Шаг 8: Проверка доступности сервиса
       - name: Test Service Endpoint
         run: |
           curl -f http://127.0.0.1:5000 || (echo "Service is not running!" && exit 1)
@@ -59,7 +75,7 @@ jobs:
         run: |
           curl -f http://127.0.0.1:5000/register/ || (echo "Service is not running!" && exit 1)
           
-      # Шаг 7: Очистка контейнера
+      # Шаг 9: Очистка контейнера
       - name: Clean up
         run: |
           docker stop medicine_service_test
