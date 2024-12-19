@@ -37,8 +37,8 @@ jobs:
       # Шаг 6: Наполнение данными
       - name: Fill data
         run: |
-          sh -c "python ./Medicine_service/manage.py fill_positions" \
-            sh -c "python ./Medicine_service/manage.py fill_categories"
+          sh -c "python /Medicine_service/manage.py fill_positions" \
+            sh -c "python /Medicine_service/manage.py fill_categories"
       
       # Шаг 7: Юнит тест
       - name: Unit test
