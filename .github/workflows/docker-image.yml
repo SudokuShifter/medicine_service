@@ -35,15 +35,22 @@ jobs:
           sleep 10
 
       # Шаг 6: Наполнение данными
-      - name: Fill data
+      - name: Fill data step 1
         run: |
-          sh -c "python ./Medicine_service/manage.py fill_positions" \
+          docker exec -it medicine_service_test bash \
+            sh -c "python ./Medicine_service/manage.py fill_positions" 
+
+      - name: Fill data step 2
+        run: |
+          docker exec -it medicine_service_test bash \
             sh -c "python ./Medicine_service/manage.py fill_categories"
+            
       
       # Шаг 7: Юнит тест
       - name: Unit test
         run: |
-          sh -c "python ./manage.py test"
+          docker exec -it medicine_service_test bash \
+            sh -c "python ./Medicine_service/manage.py test"
       
       # Шаг 8: Проверка доступности сервиса
       - name: Test Service Endpoint
