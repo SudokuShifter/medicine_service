@@ -34,23 +34,21 @@ jobs:
             sh -c "python ./Medicine_service/manage.py migrate && python ./Medicine_service/manage.py runserver 0.0.0.0:5000"
           sleep 10
 
-      # Шаг 6: Наполнение данными
-      - name: Fill data step 1
+     # Шаг 6: Наполнение данными
+      - name: Fill data
         run: |
-          docker exec -it medicine_service_test bash \
-            sh -c "python ./Medicine_service/manage.py fill_positions" 
+          docker exec medicine_service_test bash -c "
+            python ./Medicine_service/manage.py fill_positions &&
+            python ./Medicine_service/manage.py fill_categories
+            "
 
-      - name: Fill data step 2
-        run: |
-          docker exec -it medicine_service_test bash \
-            sh -c "python ./Medicine_service/manage.py fill_categories"
-            
-      
-      # Шаг 7: Юнит тест
+    # Шаг 7: Юнит тесты
       - name: Unit test
         run: |
-          docker exec -it medicine_service_test bash \
-            sh -c "python ./Medicine_service/manage.py test"
+          docker exec medicine_service_test bash -c "
+            python ./Medicine_service/manage.py test
+            "
+
       
       # Шаг 8: Проверка доступности сервиса
       - name: Test Service Endpoint
