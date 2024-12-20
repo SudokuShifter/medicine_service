@@ -34,10 +34,9 @@
                     <li><a href="#" class="nav-link px-2 link-dark">Личный кабинет</a></li>
                 {% elif user.is_authenticated %}
                     {% if user.doctor_profile %}
-                        <li><a href="{% url 'check_records' %}" class="nav-link px-2 link-dark">Записи</a></li>
                         <li><a href="{% url 'lk' slug=user.doctor_profile.slug %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>
                     {% elif user.user_profile %}
-                <li><a href="{% url 'check_records' %}" class="nav-link px-2 link-dark">Записи</a></li>
+                        <li><a href="{% url 'check_records' %}" class="nav-link px-2 link-dark">Записи</a></li>
                         <li><a href="{% url 'lk' slug=user.user_profile.slug %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>
                     {% else %}
                         <li><a href="{% url 'edit_data' %}" class="nav-link px-2 link-dark">Личный кабинет</a></li>
